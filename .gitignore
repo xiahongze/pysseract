@@ -1,0 +1,5 @@
+var
+build/*
+.eggs
+.vscode
+*.pyc
