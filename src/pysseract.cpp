@@ -1,12 +1,7 @@
 #include <pysseract.h>
 #include <tesseract/genericvector.h>
-#include <iostream>
 
-int add(int i, int j) { return i + j; }
-
-const char* Pysseract::Version() { return tesseract::TessBaseAPI::Version(); }
-
-const std::vector<std::string> Pysseract::AvailableLanguages() {
+std::vector<std::string> availableLanguages() {
     tesseract::TessBaseAPI api;
     api.Init(nullptr, nullptr);
     GenericVector<STRING> glangs;

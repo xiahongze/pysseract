@@ -2,13 +2,11 @@
 #include <tesseract/baseapi.h>
 #include <vector>
 
-int add(int i, int j);
+std::vector<std::string> availableLanguages();
 
 class Pysseract {
    public:
     Pysseract();
-    static const char* Version();
-    static const std::vector<std::string> AvailableLanguages();
 
    private:
     tesseract::TessBaseAPI api;

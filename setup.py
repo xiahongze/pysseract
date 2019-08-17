@@ -1,7 +1,8 @@
-from setuptools import setup, Extension
-from setuptools.command.build_ext import build_ext
 import sys
+
 import setuptools
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
 
 __version__ = '0.0.1'
 
@@ -20,19 +21,9 @@ class get_pybind_include(object):
         return pybind11.get_include(self.user)
 
 
-ext_modules = [
-    Extension(
-        'pysseract',
-        ['src/pysseract.cpp', 'src/pymodule.cpp'],
-        include_dirs=[
-            # Path to pybind11 headers
-            get_pybind_include(),
-            get_pybind_include(user=True),
-            "src/"
-        ],
-        language='c++'
-    ),
-]
+extra_flags = []
+if sys.platform == 'darwin':
+    extra_flags = ['-stdlib=libc++', '-mmacosx-version-min=10.14']
 
 
 # As of Python 3.6, CCompiler has a `has_flag` method.
@@ -45,7 +36,7 @@ def has_flag(compiler, flagname):
     with tempfile.NamedTemporaryFile('w', suffix='.cpp') as f:
         f.write('int main (int argc, char **argv) { return 0; }')
         try:
-            compiler.compile([f.name], extra_postargs=[flagname])
+            compiler.compile([f.name], extra_postargs=[flagname, *extra_flags])
         except setuptools.distutils.errors.CompileError:
             return False
     return True
@@ -69,48 +60,55 @@ class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
     c_opts = {
         'msvc': ['/EHsc'],
-        'unix': [],
+        'unix': extra_flags,
     }
     l_opts = {
         'msvc': ['-ltesseract'],
         'unix': ['-ltesseract'],
     }
 
-    if sys.platform == 'darwin':
-        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.14']
-        c_opts['unix'] += darwin_opts
-        l_opts['unix'] += darwin_opts
-
     def build_extensions(self):
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
+        opts.append(f'-DVERSION_INFO="{self.distribution.get_version()}"')
         link_opts = self.l_opts.get(ct, [])
+        print(opts, link_opts)
         if ct == 'unix':
-            opts.append('-DVERSION_INFO="%s"' %
-                        self.distribution.get_version())
             opts.append(cpp_flag(self.compiler))
             if has_flag(self.compiler, '-fvisibility=hidden'):
                 opts.append('-fvisibility=hidden')
-        elif ct == 'msvc':
-            opts.append('/DVERSION_INFO=\\"%s\\"' %
-                        self.distribution.get_version())
         for ext in self.extensions:
             ext.extra_compile_args = opts
             ext.extra_link_args = link_opts
         build_ext.build_extensions(self)
 
 
-setup(
-    name='Pysseract',
-    version=__version__,
-    author='Hongze Xia',
-    author_email='hongzex@gmail.com',
-    url='https://github.com/xiahongze/pysseract',
-    description='Python binding to Tesseract API',
-    long_description='',
-    ext_modules=ext_modules,
-    install_requires=['pybind11>=2.2'],
-    setup_requires=['pybind11>=2.2'],
-    cmdclass={'build_ext': BuildExt},
-    zip_safe=False,
-)
+if __name__ == "__main__":
+    from glob import glob
+
+    ext = Extension(
+        'pysseract',
+        glob("src/*.cpp"),
+        include_dirs=[
+            # Path to pybind11 headers
+            get_pybind_include(),
+            get_pybind_include(user=True),
+            "src/"
+        ],
+        language='c++'
+    )
+
+    setup(
+        name='Pysseract',
+        version=__version__,
+        author='Hongze Xia',
+        author_email='hongzex@gmail.com',
+        url='https://github.com/xiahongze/pysseract',
+        description='Python binding to Tesseract API',
+        long_description='',
+        ext_modules=[ext],
+        install_requires=['pybind11>=2.2'],
+        setup_requires=['pybind11>=2.2'],
+        cmdclass={'build_ext': BuildExt},
+        zip_safe=False,
+    )

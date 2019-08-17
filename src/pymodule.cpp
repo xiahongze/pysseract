@@ -6,29 +6,32 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(pysseract, m) {
     m.doc() = R"pbdoc(
-        Pybind11 example plugin
+        Pysseract
         -----------------------
-        .. currentmodule:: python_example
+        .. currentmodule:: pysseract
         .. autosummary::
            :toctree: _generate
-           add
-           subtract
+           Pysseract
+           apiVersion
+           availableLanguages
     )pbdoc";
 
-    py::class_<Pysseract>(m, "Pysseract")
-        .def_static("Version", &Pysseract::Version)
-        .def_static("AvailableLanguages", &Pysseract::AvailableLanguages);
-
-    m.def("add", &add, R"pbdoc(
-        Add two numbers
-        Some other explanation about the add function.
+    m.def("apiVersion", &tesseract::TessBaseAPI::Version, R"pbdoc(
+        Tesseract API version as seen in the library
+    )pbdoc");
+    m.def("availableLanguages", &availableLanguages, R"pbdoc(
+        return a list of available languages from TESSDATA_PREFIX
     )pbdoc");
 
-    m.def("subtract", [](int i, int j) { return i - j; }, R"pbdoc(
-        Subtract two numbers
-        Some other explanation about the subtract function.
+    py::class_<Pysseract>(m, "Pysseract", R"pbdoc(
+        Pysseract
+        ---------------------
+        main class to interact with Tesseract API
     )pbdoc");
 
+/**
+ * VERSION_INFO is set from setup.py
+ **/
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
 #else
