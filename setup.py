@@ -1,4 +1,6 @@
+import shutil
 import sys
+from glob import glob
 
 import setuptools
 from setuptools import Extension, setup
@@ -84,8 +86,6 @@ class BuildExt(build_ext):
 
 
 if __name__ == "__main__":
-    from glob import glob
-
     ext = Extension(
         'pysseract',
         glob("src/*.cpp"),
@@ -112,3 +112,5 @@ if __name__ == "__main__":
         cmdclass={'build_ext': BuildExt},
         zip_safe=False,
     )
+
+    shutil.rmtree('var')  # cleanup
