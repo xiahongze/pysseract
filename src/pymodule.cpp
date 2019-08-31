@@ -33,7 +33,7 @@ PYBIND11_MODULE(pysseract, m) {
     )pbdoc")
         .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("language"))
         .def(py::init<>())
-        .def("Clear()", &Pysseract::Clear, R"pbdoc(
+        .def("Clear", &Pysseract::Clear, R"pbdoc(
             Free up recognition results and any stored image data, without actually
             freeing any recognition data that would be time-consuming to reload.
             Afterwards, you must call SetImage or TesseractRect before doing
@@ -41,6 +41,14 @@ PYBIND11_MODULE(pysseract, m) {
         )pbdoc")
         .def_property_readonly("dataPath", &Pysseract::GetDataPath)
         .def_property("pageSegMode", &Pysseract::GetPageSegMode, &Pysseract::SetPageSegMode)
+        .def_property_readonly("utf8Text", &Pysseract::GetUTF8Text)
+        .def_property_readonly("unlvText", &Pysseract::GetUNLVText)
+        .def("GetHOCRText", &Pysseract::GetHOCRText, py::arg("pagenum"))
+        .def("GetTSVText", &Pysseract::GetTSVText, py::arg("pagenum"))
+        .def("GetAltoText", &Pysseract::GetAltoText, py::arg("pagenum"))
+        .def("GetLSTMBoxText", &Pysseract::GetLSTMBoxText, py::arg("pagenum"))
+        .def("GetWordStrBoxText", &Pysseract::GetWordStrBoxText, py::arg("pagenum"))
+        .def("GetOsdText", &Pysseract::GetOsdText, py::arg("pagenum"))
         .def("SetSourceResolution", &Pysseract::SetSourceResolution, py::arg("ppi"))
         .def("SetImageFromPath", &Pysseract::SetImageFromPath, py::arg("imgpath"))
         .def("SetImageFromBytes", &Pysseract::SetImageFromBytes, py::arg("bytes"));

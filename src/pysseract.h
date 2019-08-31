@@ -12,9 +12,18 @@ class Pysseract {
     Pysseract();
     void Clear();
 
-    void SetPageSegMode(const int mode);
     const int GetPageSegMode();
     const char* GetDataPath();
+    const char* GetUTF8Text();
+    const char* GetUNLVText();
+    const char* GetHOCRText(const int pagenum);
+    const char* GetTSVText(const int pagenum);
+    const char* GetAltoText(const int pagenum);
+    const char* GetLSTMBoxText(const int pagenum);
+    const char* GetBoxText(const int pagenum);
+    const char* GetWordStrBoxText(const int pagenum);
+    const char* GetOsdText(const int pagenum);
+    void SetPageSegMode(const int mode);
     void SetSourceResolution(const int ppi);
     void SetImageFromPath(const char* imgpath);
     void SetImageFromBytes(const std::string& bytes);

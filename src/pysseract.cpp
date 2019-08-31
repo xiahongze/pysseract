@@ -32,7 +32,15 @@ void Pysseract::SetImageFromPath(const char* imgpath) {
     api.SetImage(image);
 }
 void Pysseract::SetImageFromBytes(const std::string& bytes) {
-    char* chars = (char*)bytes.data();
-    Pix* image = pixReadMem(reinterpret_cast<unsigned char*>(chars), bytes.size());
+    Pix* image = pixReadMem((unsigned char*)bytes.data(), bytes.size());
     api.SetImage(image);
 }
+const char* Pysseract::GetUTF8Text() { return api.GetUTF8Text(); }
+const char* Pysseract::GetUNLVText() { return api.GetUNLVText(); }
+const char* Pysseract::GetHOCRText(const int pagenum) { return api.GetHOCRText(pagenum); }
+const char* Pysseract::GetTSVText(const int pagenum) { return api.GetTSVText(pagenum); }
+const char* Pysseract::GetAltoText(const int pagenum) { return api.GetAltoText(pagenum); }
+const char* Pysseract::GetLSTMBoxText(const int pagenum) { return api.GetLSTMBoxText(pagenum); }
+const char* Pysseract::GetBoxText(const int pagenum) { return api.GetBoxText(pagenum); }
+const char* Pysseract::GetWordStrBoxText(const int pagenum) { return api.GetWordStrBoxText(pagenum); }
+const char* Pysseract::GetOsdText(const int pagenum) { return api.GetOsdText(pagenum); }
