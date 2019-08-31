@@ -31,7 +31,7 @@ PYBIND11_MODULE(pysseract, m) {
         ---------------------
         main class to interact with Tesseract API
     )pbdoc")
-        .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("languages"));
+        .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("language"));
 
 /**
  * VERSION_INFO is set from setup.py

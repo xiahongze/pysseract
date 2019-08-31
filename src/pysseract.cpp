@@ -19,4 +19,4 @@ const char* defaultDataPath() {
     return api.GetDatapath();
 }
 
-Pysseract::Pysseract(const char* datapath, const char* languages) { api.Init(datapath, languages); }
+Pysseract::Pysseract(const char* datapath, const char* language) { api.Init(datapath, language); }
