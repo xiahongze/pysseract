@@ -31,7 +31,14 @@ PYBIND11_MODULE(pysseract, m) {
         ---------------------
         main class to interact with Tesseract API
     )pbdoc")
-        .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("language"));
+        .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("language"))
+        .def(py::init<>())
+        .def("GetDataPath", &Pysseract::GetDataPath)
+        .def("GetPageSegMode", &Pysseract::GetPageSegMode)
+        .def("SetPageSegMode", &Pysseract::SetPageSegMode, py::arg("mode"))
+        .def("SetSourceResolution", &Pysseract::SetSourceResolution, py::arg("ppi"))
+        .def("SetImageFromPath", &Pysseract::SetImageFromPath, py::arg("imgpath"))
+        .def("SetImageFromBytes", &Pysseract::SetImageFromBytes, py::arg("bytes"));
 
 /**
  * VERSION_INFO is set from setup.py
