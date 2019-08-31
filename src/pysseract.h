@@ -10,6 +10,8 @@ class Pysseract {
    public:
     Pysseract(const char* datapath, const char* language);
     Pysseract();
+    void Clear();
+
     void SetPageSegMode(const int mode);
     const int GetPageSegMode();
     const char* GetDataPath();

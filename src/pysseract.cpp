@@ -21,6 +21,8 @@ const char* defaultDataPath() {
 
 Pysseract::Pysseract(const char* datapath, const char* language) { api.Init(datapath, language); }
 Pysseract::Pysseract() { api.Init(nullptr, nullptr); }
+void Pysseract::Clear() { api.Clear(); }
+
 const int Pysseract::GetPageSegMode() { return api.GetPageSegMode(); }
 void Pysseract::SetPageSegMode(const int mode) { api.SetPageSegMode(tesseract::PageSegMode(mode)); }
 const char* Pysseract::GetDataPath() { return api.GetDatapath(); }

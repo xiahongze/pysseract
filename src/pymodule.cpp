@@ -33,6 +33,12 @@ PYBIND11_MODULE(pysseract, m) {
     )pbdoc")
         .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("language"))
         .def(py::init<>())
+        .def("Clear()", &Pysseract::Clear, R"pbdoc(
+            Free up recognition results and any stored image data, without actually
+            freeing any recognition data that would be time-consuming to reload.
+            Afterwards, you must call SetImage or TesseractRect before doing
+            any Recognize or Get* operation.
+        )pbdoc")
         .def_property_readonly("dataPath", &Pysseract::GetDataPath)
         .def_property("pageSegMode", &Pysseract::GetPageSegMode, &Pysseract::SetPageSegMode)
         .def("SetSourceResolution", &Pysseract::SetSourceResolution, py::arg("ppi"))
