@@ -51,7 +51,10 @@ PYBIND11_MODULE(pysseract, m) {
         .def("GetOsdText", &Pysseract::GetOsdText, py::arg("pagenum"))
         .def("SetSourceResolution", &Pysseract::SetSourceResolution, py::arg("ppi"))
         .def("SetImageFromPath", &Pysseract::SetImageFromPath, py::arg("imgpath"))
-        .def("SetImageFromBytes", &Pysseract::SetImageFromBytes, py::arg("bytes"));
+        .def("SetImageFromBytes", &Pysseract::SetImageFromBytes, py::arg("bytes"))
+        .def("SetRectangle", &Pysseract::SetRectangle, py::arg("left"), py::arg("top"), py::arg("width"),
+             py::arg("height"),
+             R"pbdoc(Restrict recognition to a sub-rectangle of the image. Call after SetImage.)pbdoc");
 
 /**
  * VERSION_INFO is set from setup.py

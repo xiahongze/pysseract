@@ -23,10 +23,12 @@ class Pysseract {
     const char* GetBoxText(const int pagenum);
     const char* GetWordStrBoxText(const int pagenum);
     const char* GetOsdText(const int pagenum);
+
     void SetPageSegMode(const int mode);
     void SetSourceResolution(const int ppi);
     void SetImageFromPath(const char* imgpath);
     void SetImageFromBytes(const std::string& bytes);
+    void SetRectangle(int left, int top, int width, int height);
 
    private:
     tesseract::TessBaseAPI api;

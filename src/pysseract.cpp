@@ -35,6 +35,8 @@ void Pysseract::SetImageFromBytes(const std::string& bytes) {
     Pix* image = pixReadMem((unsigned char*)bytes.data(), bytes.size());
     api.SetImage(image);
 }
+void Pysseract::SetRectangle(int left, int top, int width, int height) { api.SetRectangle(left, top, width, height); }
+
 const char* Pysseract::GetUTF8Text() { return api.GetUTF8Text(); }
 const char* Pysseract::GetUNLVText() { return api.GetUNLVText(); }
 const char* Pysseract::GetHOCRText(const int pagenum) { return api.GetHOCRText(pagenum); }
