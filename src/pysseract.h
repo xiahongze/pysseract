@@ -3,10 +3,11 @@
 #include <vector>
 
 std::vector<std::string> availableLanguages();
+const char* defaultDataPath();
 
 class Pysseract {
    public:
-    Pysseract();
+    Pysseract(const char* datapath, const char* languages);
 
    private:
     tesseract::TessBaseAPI api;

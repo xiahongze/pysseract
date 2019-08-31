@@ -65,8 +65,8 @@ class BuildExt(build_ext):
         'unix': extra_flags,
     }
     l_opts = {
-        'msvc': ['-ltesseract'],
-        'unix': ['-ltesseract'],
+        'msvc': ['-ltesseract', *extra_flags],
+        'unix': ['-ltesseract', *extra_flags],
     }
 
     def build_extensions(self):
@@ -113,4 +113,4 @@ if __name__ == "__main__":
         zip_safe=False,
     )
 
-    shutil.rmtree('var')  # cleanup
+    shutil.rmtree('var', True)  # cleanup

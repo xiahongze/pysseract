@@ -12,3 +12,11 @@ std::vector<std::string> availableLanguages() {
     }
     return langs;
 }
+
+const char* defaultDataPath() {
+    tesseract::TessBaseAPI api;
+    api.Init(nullptr, nullptr);
+    return api.GetDatapath();
+}
+
+Pysseract::Pysseract(const char* datapath, const char* languages) { api.Init(datapath, languages); }

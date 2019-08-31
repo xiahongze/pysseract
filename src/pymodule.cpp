@@ -22,12 +22,16 @@ PYBIND11_MODULE(pysseract, m) {
     m.def("availableLanguages", &availableLanguages, R"pbdoc(
         return a list of available languages from TESSDATA_PREFIX
     )pbdoc");
+    m.def("defaultDataPath", &defaultDataPath, R"pbdoc(
+        return TESSDATA_PREFIX
+    )pbdoc");
 
     py::class_<Pysseract>(m, "Pysseract", R"pbdoc(
         Pysseract
         ---------------------
         main class to interact with Tesseract API
-    )pbdoc");
+    )pbdoc")
+        .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("languages"));
 
 /**
  * VERSION_INFO is set from setup.py
