@@ -33,9 +33,8 @@ PYBIND11_MODULE(pysseract, m) {
     )pbdoc")
         .def(py::init<const char*, const char*>(), py::arg("datapath"), py::arg("language"))
         .def(py::init<>())
-        .def("GetDataPath", &Pysseract::GetDataPath)
-        .def("GetPageSegMode", &Pysseract::GetPageSegMode)
-        .def("SetPageSegMode", &Pysseract::SetPageSegMode, py::arg("mode"))
+        .def_property_readonly("dataPath", &Pysseract::GetDataPath)
+        .def_property("pageSegMode", &Pysseract::GetPageSegMode, &Pysseract::SetPageSegMode)
         .def("SetSourceResolution", &Pysseract::SetSourceResolution, py::arg("ppi"))
         .def("SetImageFromPath", &Pysseract::SetImageFromPath, py::arg("imgpath"))
         .def("SetImageFromBytes", &Pysseract::SetImageFromBytes, py::arg("bytes"));
