@@ -123,6 +123,7 @@ PYBIND11_MODULE(pysseract, m) {
         .def("ParagraphIsLtr", &ResultIterator::ParagraphIsLtr)
         .def("BlanksBeforeWord", &ResultIterator::BlanksBeforeWord)
         .def("GetUTF8Text", &ResultIterator::GetUTF8Text)
+        .def("Confidence", &ResultIterator::Confidence)
         .def("GetBestLSTMSymbolChoices", &ResultIterator::GetBestLSTMSymbolChoices);
 /**
  * VERSION_INFO is set from setup.py
