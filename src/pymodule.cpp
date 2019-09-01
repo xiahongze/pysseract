@@ -3,6 +3,8 @@
 #include <pysseract.h>
 
 namespace py = pybind11;
+using tesseract::PageIteratorLevel;
+using tesseract::PageSegMode;
 
 PYBIND11_MODULE(pysseract, m) {
     m.doc() = R"pbdoc(
@@ -56,6 +58,35 @@ PYBIND11_MODULE(pysseract, m) {
              py::arg("height"),
              R"pbdoc(Restrict recognition to a sub-rectangle of the image. Call after SetImage.)pbdoc");
 
+    py::enum_<PageIteratorLevel>(m, "PageIteratorLevel")
+        .value("RIL_BLOCK", PageIteratorLevel::RIL_BLOCK)
+        .value("RIL_PARA", PageIteratorLevel::RIL_PARA)
+        .value("RIL_TEXTLINE", PageIteratorLevel::RIL_TEXTLINE)
+        .value("RIL_WORD", PageIteratorLevel::RIL_WORD)
+        .value("RIL_SYMBOL", PageIteratorLevel::RIL_SYMBOL);
+
+    py::enum_<PageSegMode>(m, "PageSegMode")
+        .value("PSM_OSD_ONLY", PageSegMode::PSM_OSD_ONLY)
+        .value("PSM_AUTO_OSD", PageSegMode::PSM_AUTO_OSD)
+        .value("PSM_AUTO_ONLY", PageSegMode::PSM_AUTO_ONLY)
+        .value("PSM_AUTO", PageSegMode::PSM_AUTO)
+        .value("PSM_SINGLE_COLUMN", PageSegMode::PSM_SINGLE_COLUMN)
+        .value("PSM_SINGLE_BLOCK_VERT_TEXT", PageSegMode::PSM_SINGLE_BLOCK_VERT_TEXT)
+        .value("PSM_SINGLE_BLOCK", PageSegMode::PSM_SINGLE_BLOCK)
+        .value("PSM_SINGLE_LINE", PageSegMode::PSM_SINGLE_LINE)
+        .value("PSM_SINGLE_WORD", PageSegMode::PSM_SINGLE_WORD)
+        .value("PSM_CIRCLE_WORD", PageSegMode::PSM_CIRCLE_WORD)
+        .value("PSM_SINGLE_CHAR", PageSegMode::PSM_SINGLE_CHAR)
+        .value("PSM_SPARSE_TEXT", PageSegMode::PSM_SPARSE_TEXT)
+        .value("PSM_SPARSE_TEXT_OSD", PageSegMode::PSM_SPARSE_TEXT_OSD)
+        .value("PSM_RAW_LINE", PageSegMode::PSM_RAW_LINE)
+        .value("PSM_COUNT", PageSegMode::PSM_COUNT);
+
+    py::class_<Box>(m, "Box", R"pbdoc(individual bounding box)pbdoc")
+        .def_readonly("left", &Box::x)
+        .def_readonly("top", &Box::y)
+        .def_readonly("width", &Box::w)
+        .def_readonly("height", &Box::h);
 /**
  * VERSION_INFO is set from setup.py
  **/

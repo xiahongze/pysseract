@@ -23,8 +23,8 @@ Pysseract::Pysseract(const char* datapath, const char* language) { api.Init(data
 Pysseract::Pysseract() { api.Init(nullptr, nullptr); }
 void Pysseract::Clear() { api.Clear(); }
 
-const int Pysseract::GetPageSegMode() { return api.GetPageSegMode(); }
-void Pysseract::SetPageSegMode(const int mode) { api.SetPageSegMode(tesseract::PageSegMode(mode)); }
+tesseract::PageSegMode Pysseract::GetPageSegMode() { return api.GetPageSegMode(); }
+void Pysseract::SetPageSegMode(tesseract::PageSegMode mode) { api.SetPageSegMode(mode); }
 const char* Pysseract::GetDataPath() { return api.GetDatapath(); }
 void Pysseract::SetSourceResolution(const int ppi) { api.SetSourceResolution(ppi); }
 void Pysseract::SetImageFromPath(const char* imgpath) {

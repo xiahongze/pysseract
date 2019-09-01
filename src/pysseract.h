@@ -12,7 +12,7 @@ class Pysseract {
     Pysseract();
     void Clear();
 
-    const int GetPageSegMode();
+    tesseract::PageSegMode GetPageSegMode();
     const char* GetDataPath();
     const char* GetUTF8Text();
     const char* GetUNLVText();
@@ -24,7 +24,7 @@ class Pysseract {
     const char* GetWordStrBoxText(const int pagenum);
     const char* GetOsdText(const int pagenum);
 
-    void SetPageSegMode(const int mode);
+    void SetPageSegMode(tesseract::PageSegMode mode);
     void SetSourceResolution(const int ppi);
     void SetImageFromPath(const char* imgpath);
     void SetImageFromBytes(const std::string& bytes);
