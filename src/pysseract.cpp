@@ -36,6 +36,7 @@ void Pysseract::SetImageFromBytes(const std::string& bytes) {
     api.SetImage(image);
 }
 void Pysseract::SetRectangle(int left, int top, int width, int height) { api.SetRectangle(left, top, width, height); }
+bool Pysseract::SetVariable(const char* name, const char* value) { return api.SetVariable(name, value); }
 
 const char* Pysseract::GetUTF8Text() { return api.GetUTF8Text(); }
 const char* Pysseract::GetUNLVText() { return api.GetUNLVText(); }
@@ -46,3 +47,9 @@ const char* Pysseract::GetLSTMBoxText(const int pagenum) { return api.GetLSTMBox
 const char* Pysseract::GetBoxText(const int pagenum) { return api.GetBoxText(pagenum); }
 const char* Pysseract::GetWordStrBoxText(const int pagenum) { return api.GetWordStrBoxText(pagenum); }
 const char* Pysseract::GetOsdText(const int pagenum) { return api.GetOsdText(pagenum); }
+std::unique_ptr<tesseract::ResultIterator> Pysseract::GetIterator() {
+    if (api.Recognize(nullptr) < 0) {
+        return nullptr;
+    }
+    return std::unique_ptr<tesseract::ResultIterator>(api.GetIterator());
+};
