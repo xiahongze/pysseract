@@ -20,9 +20,13 @@ PYBIND11_MODULE(pysseract, m) {
         
            :toctree: _generate
            Pysseract
+           Box
+           PageIteratorLevel
+           PageSegMode
            apiVersion
            availableLanguages
            defaultDataPath
+
     )pbdoc";
 
     m.def("apiVersion", &tesseract::TessBaseAPI::Version, "Tesseract API version as seen in the library");
@@ -89,54 +93,57 @@ PYBIND11_MODULE(pysseract, m) {
              [](TessBaseAPI &api) {
                  api.Recognize(nullptr);
                  return api.GetIterator();
-             })
-        .def("SetSourceResolution", &TessBaseAPI::SetSourceResolution, py::arg("ppi"))
+             },
+             "Returns the iterator over boxes found in a given source image")
+        .def("SetSourceResolution", &TessBaseAPI::SetSourceResolution, py::arg("ppi"),
+             "Set the pixel-per-inch value for the source image")
         .def("SetImageFromPath",
              [](TessBaseAPI &api, const char *imgpath) {
                  Pix *image = pixRead(imgpath);
                  api.SetImage(image);
              },
-             py::arg("imgpath"))
+             py::arg("imgpath"), "Read an image from a given fully-qualified file path")
         .def("SetImageFromBytes",
              [](TessBaseAPI &api, const std::string &bytes) {
                  Pix *image = pixReadMem((unsigned char *)bytes.data(), bytes.size());
                  api.SetImage(image);
              },
-             py::arg("bytes"))
+             py::arg("bytes"), "Read an image from a string of bytes")
         .def("SetVariable", &TessBaseAPI::SetVariable, py::arg("name"), py::arg("value"),
              "Note: Must be called after Init(). Only works for non-init variables.")
         .def("SetRectangle", &TessBaseAPI::SetRectangle, py::arg("left"), py::arg("top"), py::arg("width"),
              py::arg("height"), "Restrict recognition to a sub-rectangle of the image. Call after SetImage.");
 
-    py::enum_<PageIteratorLevel>(m, "PageIteratorLevel")
-        .value("BLOCK", PageIteratorLevel::RIL_BLOCK)
-        .value("PARA", PageIteratorLevel::RIL_PARA)
-        .value("TEXTLINE", PageIteratorLevel::RIL_TEXTLINE)
-        .value("WORD", PageIteratorLevel::RIL_WORD)
-        .value("SYMBOL", PageIteratorLevel::RIL_SYMBOL);
+    py::enum_<PageIteratorLevel>(m, "PageIteratorLevel", "Enumeration of page iteration level settings")
+        .value("BLOCK", PageIteratorLevel::RIL_BLOCK, "Examine and return text at the block level")
+        .value("PARA", PageIteratorLevel::RIL_PARA, "Examine and return text at the paragraph level")
+        .value("TEXTLINE", PageIteratorLevel::RIL_TEXTLINE, "Examine and return text at the text line level")
+        .value("WORD", PageIteratorLevel::RIL_WORD, "Examine and return text at the word level")
+        .value("SYMBOL", PageIteratorLevel::RIL_SYMBOL, "Examine and return text at the symbol level");
 
-    py::enum_<PageSegMode>(m, "PageSegMode")
-        .value("OSD_ONLY", PageSegMode::PSM_OSD_ONLY)
-        .value("AUTO_OSD", PageSegMode::PSM_AUTO_OSD)
-        .value("AUTO_ONLY", PageSegMode::PSM_AUTO_ONLY)
-        .value("AUTO", PageSegMode::PSM_AUTO)
-        .value("SINGLE_COLUMN", PageSegMode::PSM_SINGLE_COLUMN)
-        .value("SINGLE_BLOCK_VERT_TEXT", PageSegMode::PSM_SINGLE_BLOCK_VERT_TEXT)
-        .value("SINGLE_BLOCK", PageSegMode::PSM_SINGLE_BLOCK)
-        .value("SINGLE_LINE", PageSegMode::PSM_SINGLE_LINE)
-        .value("SINGLE_WORD", PageSegMode::PSM_SINGLE_WORD)
-        .value("CIRCLE_WORD", PageSegMode::PSM_CIRCLE_WORD)
-        .value("SINGLE_CHAR", PageSegMode::PSM_SINGLE_CHAR)
-        .value("SPARSE_TEXT", PageSegMode::PSM_SPARSE_TEXT)
-        .value("SPARSE_TEXT_OSD", PageSegMode::PSM_SPARSE_TEXT_OSD)
-        .value("RAW_LINE", PageSegMode::PSM_RAW_LINE)
-        .value("COUNT", PageSegMode::PSM_COUNT);
+    py::enum_<PageSegMode>(m, "PageSegMode", "Enumeration of page segmentation settings")
+        .value("OSD_ONLY", PageSegMode::PSM_OSD_ONLY, "Segment the page in \"OSD only\" mode")
+        .value("AUTO_OSD", PageSegMode::PSM_AUTO_OSD, "Segment the page in \"Auto OSD\" mode")
+        .value("AUTO_ONLY", PageSegMode::PSM_AUTO_ONLY, "Segment the page in \"Automatic only\" mode")
+        .value("AUTO", PageSegMode::PSM_AUTO, "Segment the page in \"Automatic\" mode")
+        .value("SINGLE_COLUMN", PageSegMode::PSM_SINGLE_COLUMN, "Segment the page in \"Single column\" mode")
+        .value("SINGLE_BLOCK_VERT_TEXT", PageSegMode::PSM_SINGLE_BLOCK_VERT_TEXT,
+               "Segment the page in \"Single block of vertical text\" mode")
+        .value("SINGLE_BLOCK", PageSegMode::PSM_SINGLE_BLOCK, "Segment the page in \"Single block\" mode")
+        .value("SINGLE_LINE", PageSegMode::PSM_SINGLE_LINE, "Segment the page in \"Single line\" mode")
+        .value("SINGLE_WORD", PageSegMode::PSM_SINGLE_WORD, "Segment the page in \"Single word\" mode")
+        .value("CIRCLE_WORD", PageSegMode::PSM_CIRCLE_WORD, "Segment the page in \"Circle word\" mode")
+        .value("SINGLE_CHAR", PageSegMode::PSM_SINGLE_CHAR, "Segment the page in \"Single character\" mode")
+        .value("SPARSE_TEXT", PageSegMode::PSM_SPARSE_TEXT, "Segment the page in \"Sparse text\" mode")
+        .value("SPARSE_TEXT_OSD", PageSegMode::PSM_SPARSE_TEXT_OSD, "Segment the page in \"Sparse text OSD\" mode")
+        .value("RAW_LINE", PageSegMode::PSM_RAW_LINE, "Segment the page in \"Raw line\" mode")
+        .value("COUNT", PageSegMode::PSM_COUNT, "Segment the page in \"Count\" mode");
 
-    py::class_<Box>(m, "Box", R"pbdoc(individual bounding box)pbdoc")
-        .def_readonly("left", &Box::x)
-        .def_readonly("top", &Box::y)
-        .def_readonly("width", &Box::w)
-        .def_readonly("height", &Box::h)
+    py::class_<Box>(m, "Box", R"pbdoc(The bounding box structure)pbdoc")
+        .def_readonly("left", &Box::x, "Leftmost co-ordinate of the box")
+        .def_readonly("top", &Box::y, "Topmost co-ordinate of the box")
+        .def_readonly("width", &Box::w, "Box width")
+        .def_readonly("height", &Box::h, "Box height")
         .def("__repr__",
              [](const Box &box) {
                  std::ostringstream os;
@@ -144,10 +151,12 @@ PYBIND11_MODULE(pysseract, m) {
                     << ">";
                  return os.str();
              })
-        .def_property_readonly("valid", [](const Box &box) {
-            if (box.x < 0 || box.y <= 0 || box.w <= 0 || box.h <= 0) return false;
-            return true;
-        });
+        .def_property_readonly("valid",
+                               [](const Box &box) {
+                                   if (box.x < 0 || box.y <= 0 || box.w <= 0 || box.h <= 0) return false;
+                                   return true;
+                               },
+                               "Returns a boolean indicating whether the dimensions of the box are valid");
 
     py::class_<ResultIterator>(m, "ResultIterator")
         .def("Begin", &ResultIterator::Begin)
