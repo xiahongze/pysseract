@@ -113,6 +113,8 @@ if __name__ == "__main__":
         setup_requires=['pybind11>=2.2', 'Sphinx'],
         cmdclass={'build_ext': BuildExt},
         zip_safe=False,
+        test_suite="tests"
     )
+
 
     shutil.rmtree('var', True)  # cleanup
