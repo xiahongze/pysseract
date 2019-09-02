@@ -1,5 +1,12 @@
 var
 build/*
+docs/_build/*
+docs/_generate/*
+dist/*
+Pysseract.egg-info/*
+.DS_Store
 .eggs
+.idea
 .vscode
 *.pyc
+*.so

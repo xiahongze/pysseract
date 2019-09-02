@@ -17,10 +17,12 @@ PYBIND11_MODULE(pysseract, m) {
         -----------------------
         .. currentmodule:: pysseract
         .. autosummary::
+        
            :toctree: _generate
            Pysseract
            apiVersion
            availableLanguages
+           defaultDataPath
     )pbdoc";
 
     m.def("apiVersion", &tesseract::TessBaseAPI::Version, "Tesseract API version as seen in the library");
@@ -46,9 +48,9 @@ PYBIND11_MODULE(pysseract, m) {
           "return TESSDATA_PREFIX");
 
     py::class_<TessBaseAPI>(m, "Pysseract", R"pbdoc(
-        Pysseract
-        ---------------------
-        main class to interact with Tesseract API
+
+        This is the main class for interacting with the Tesseract API
+
     )pbdoc")
         .def(py::init([](const char *datapath, const char *language) {
                  TessBaseAPI *api = new (TessBaseAPI);
