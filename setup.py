@@ -110,11 +110,10 @@ if __name__ == "__main__":
         license='GPL-3',
         ext_modules=[ext],
         install_requires=[],
-        setup_requires=['pybind11>=2.2', 'Sphinx'],
+        setup_requires=['pybind11>=2.2'],
         cmdclass={'build_ext': BuildExt},
         zip_safe=False,
         test_suite="tests"
     )
-
 
     shutil.rmtree('var', True)  # cleanup

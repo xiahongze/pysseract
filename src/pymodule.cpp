@@ -13,7 +13,7 @@ using tesseract::TessBaseAPI;
 
 PYBIND11_MODULE(pysseract, m) {
     m.doc() = R"pbdoc(
-        Pysseract
+        pysseract
         -----------------------
         .. currentmodule:: pysseract
         .. autosummary::
@@ -21,6 +21,7 @@ PYBIND11_MODULE(pysseract, m) {
            :toctree: _generate
            Pysseract
            Box
+           ResultIterator
            PageIteratorLevel
            PageSegMode
            apiVersion
@@ -52,9 +53,17 @@ PYBIND11_MODULE(pysseract, m) {
           "return TESSDATA_PREFIX");
 
     py::class_<TessBaseAPI>(m, "Pysseract", R"pbdoc(
-
         This is the main class for interacting with the Tesseract API
+        
+        .. code-block:: python
 
+            import pysseract
+            t = pysseract.Pysseract()
+            t.SetImageFromPath('/Users/hxia/Downloads/001-helloworld.png')
+            print(t.utf8Text)
+            t.End()
+        
+        For advanced use cases, please consult ResultIterator.
     )pbdoc")
         .def(py::init([](const char *datapath, const char *language) {
                  TessBaseAPI *api = new (TessBaseAPI);
@@ -115,11 +124,11 @@ PYBIND11_MODULE(pysseract, m) {
              py::arg("height"), "Restrict recognition to a sub-rectangle of the image. Call after SetImage.");
 
     py::enum_<PageIteratorLevel>(m, "PageIteratorLevel", "Enumeration of page iteration level settings")
-        .value("BLOCK", PageIteratorLevel::RIL_BLOCK, "Examine and return text at the block level")
-        .value("PARA", PageIteratorLevel::RIL_PARA, "Examine and return text at the paragraph level")
-        .value("TEXTLINE", PageIteratorLevel::RIL_TEXTLINE, "Examine and return text at the text line level")
-        .value("WORD", PageIteratorLevel::RIL_WORD, "Examine and return text at the word level")
-        .value("SYMBOL", PageIteratorLevel::RIL_SYMBOL, "Examine and return text at the symbol level");
+        .value("BLOCK", PageIteratorLevel::RIL_BLOCK, "ResultIterator at the block level")
+        .value("PARA", PageIteratorLevel::RIL_PARA, "ResultIterator at the paragraph level")
+        .value("TEXTLINE", PageIteratorLevel::RIL_TEXTLINE, "ResultIterator at the text line level")
+        .value("WORD", PageIteratorLevel::RIL_WORD, "ResultIterator at the word level")
+        .value("SYMBOL", PageIteratorLevel::RIL_SYMBOL, "ResultIterator at the symbol level");
 
     py::enum_<PageSegMode>(m, "PageSegMode", "Enumeration of page segmentation settings")
         .value("OSD_ONLY", PageSegMode::PSM_OSD_ONLY, "Segment the page in \"OSD only\" mode")
@@ -158,7 +167,7 @@ PYBIND11_MODULE(pysseract, m) {
                                },
                                "Returns a boolean indicating whether the dimensions of the box are valid");
 
-    py::class_<ResultIterator>(m, "ResultIterator")
+    py::class_<ResultIterator>(m, "ResultIterator", "Internal Iterator that yields result at chosen level")
         .def("Begin", &ResultIterator::Begin)
         .def("Next", &ResultIterator::Next)
         .def("Empty", &ResultIterator::Empty)

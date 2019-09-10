@@ -15,6 +15,15 @@ Requirements
 python3 setup.py build
 ```
 
+# Build document
+
+```
+pip install sphinx sphinx_rtd_theme
+python3 setup.py build_sphinx
+```
+
+You should find the generated html under `build/sphinx`.
+
 ## Contribute
 
 Look at [Tesseract BaseAPI](https://github.com/tesseract-ocr/tesseract/blob/master/src/api/baseapi.cpp)
