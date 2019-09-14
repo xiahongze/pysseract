@@ -6,6 +6,7 @@
 #include <sstream>
 
 namespace py = pybind11;
+using tesseract::OcrEngineMode;
 using tesseract::PageIteratorLevel;
 using tesseract::PageSegMode;
 using tesseract::ResultIterator;
@@ -24,6 +25,7 @@ PYBIND11_MODULE(pysseract, m) {
            ResultIterator
            PageIteratorLevel
            PageSegMode
+           OcrEngineMode
            apiVersion
            availableLanguages
            defaultDataPath
@@ -71,6 +73,39 @@ PYBIND11_MODULE(pysseract, m) {
                  return std::unique_ptr<TessBaseAPI>(api);
              }),
              py::arg("datapath"), py::arg("language"))
+        .def(py::init([](const char *datapath, const char *language, OcrEngineMode mode) {
+                 TessBaseAPI *api = new (TessBaseAPI);
+                 api->Init(datapath, language, mode);
+                 return std::unique_ptr<TessBaseAPI>(api);
+             }),
+             py::arg("datapath"), py::arg("language"), py::arg("engineMode"))
+        .def(py::init([](const char *datapath, const char *language, OcrEngineMode mode,
+                         std::vector<std::string> configs, std::unordered_map<std::string, std::string> settings,
+                         bool set_only_non_debug_params) {
+                 TessBaseAPI *api = new (TessBaseAPI);
+
+                 char *configs_[configs.size()];
+                 for (size_t i = 0; i < configs.size(); i++) {
+                     configs[i] = configs[i].c_str();
+                 }
+
+                 GenericVector<STRING> vars_vec;
+                 GenericVector<STRING> vars_values;
+                 for (auto &&entry : settings) {
+                     vars_vec.push_back(STRING(entry.first.c_str()));
+                     vars_values.push_back(STRING(entry.second.c_str()));
+                 }
+
+                 api->Init(datapath, language, mode, configs_, configs.size(), &vars_vec, &vars_values,
+                           set_only_non_debug_params);
+                 return std::unique_ptr<TessBaseAPI>(api);
+             }),
+             py::arg("datapath"), py::arg("language"), py::arg("engineMode"), py::arg("configsList"),
+             py::arg("settingDict"), py::arg("setOnlyNonDebugParams"), R"pbdoc(
+                 detailed initialization for the base API, two conversions have been done as followed
+                 char **configs, int configs_size <==> configsList
+                 const GenericVector<STRING> *vars_vec, const GenericVector<STRING> *vars_values <==> settingDict
+                 )pbdoc")
         .def(py::init([]() {
             TessBaseAPI *api = new (TessBaseAPI);
             api->Init(nullptr, nullptr);
@@ -147,6 +182,22 @@ PYBIND11_MODULE(pysseract, m) {
         .value("SPARSE_TEXT_OSD", PageSegMode::PSM_SPARSE_TEXT_OSD, "Segment the page in \"Sparse text OSD\" mode")
         .value("RAW_LINE", PageSegMode::PSM_RAW_LINE, "Segment the page in \"Raw line\" mode")
         .value("COUNT", PageSegMode::PSM_COUNT, "Segment the page in \"Count\" mode");
+
+    py::enum_<OcrEngineMode>(m, "OcrEngineMode", "Enum of Engine Mode")
+        .value("TESSERACT_ONLY", OcrEngineMode::OEM_TESSERACT_ONLY, "Run Tesseract only - fastest; deprecated")
+        .value("LSTM_ONLY", OcrEngineMode::OEM_LSTM_ONLY, "Run just the LSTM line recognizer")
+        .value("TESSERACT_LSTM_COMBINED", OcrEngineMode::OEM_TESSERACT_LSTM_COMBINED,
+               "Run the LSTM recognizer, but allow fallback to Tesseract when things get difficult. deprecated")
+        .value("DEFAULT", OcrEngineMode::OEM_DEFAULT, R"pbdoc(
+            Specify this mode when calling init_*(),
+            to indicate that any of the above modes
+            should be automatically inferred from the
+            variables in the language-specific config,
+            command-line configs, or if not specified
+            in any of the above should be set to the
+            default OEM_TESSERACT_ONLY.
+            )pbdoc")
+        .value("COUNT", OcrEngineMode::OEM_COUNT, "Number of OEMs");
 
     py::class_<Box>(m, "Box", R"pbdoc(The bounding box structure)pbdoc")
         .def_readonly("left", &Box::x, "Leftmost co-ordinate of the box")
