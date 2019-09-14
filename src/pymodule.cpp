@@ -167,10 +167,25 @@ PYBIND11_MODULE(pysseract, m) {
                                },
                                "Returns a boolean indicating whether the dimensions of the box are valid");
 
-    py::class_<ResultIterator>(m, "ResultIterator", "Internal Iterator that yields result at chosen level")
+    py::class_<ResultIterator>(m, "ResultIterator", R"pbdoc(
+        Internal Iterator that yields result at chosen level
+
+        .. code-block:: python
+
+            t: pysseract.Pysseract
+            resIter = t.GetIterator()
+            LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+            while True:
+                box = resIter.BoundingBox(LEVEL)
+                text = resIter.GetUTF8Text(LEVEL)
+                if not resIter.Next(LEVEL):
+                    break
+
+        For more examples, please consult https://github.com/tesseract-ocr/tesseract/wiki/APIExample
+        )pbdoc")
         .def("Begin", &ResultIterator::Begin)
-        .def("Next", &ResultIterator::Next)
-        .def("Empty", &ResultIterator::Empty)
+        .def("Next", &ResultIterator::Next, py::arg("pageIterLv"))
+        .def("Empty", &ResultIterator::Empty, py::arg("pageIterLv"))
         .def("BoundingBox",
              [](const ResultIterator &ri, const PageIteratorLevel &lv) {
                  Box box;
@@ -180,13 +195,13 @@ PYBIND11_MODULE(pysseract, m) {
                  box.h = box.y - box.h;
                  return box;
              },
-             py::arg("pageIteratorLevel"))
-        .def("IsAtBeginningOf", &ResultIterator::IsAtBeginningOf)
-        .def("IsAtFinalElement", &ResultIterator::IsAtFinalElement)
+             py::arg("pageIterLv"))
+        .def("IsAtBeginningOf", &ResultIterator::IsAtBeginningOf, py::arg("pageIterLv"))
+        .def("IsAtFinalElement", &ResultIterator::IsAtFinalElement, py::arg("pageIterLv"), py::arg("element"))
         .def("ParagraphIsLtr", &ResultIterator::ParagraphIsLtr)
         .def("BlanksBeforeWord", &ResultIterator::BlanksBeforeWord)
-        .def("GetUTF8Text", &ResultIterator::GetUTF8Text)
-        .def("Confidence", &ResultIterator::Confidence)
+        .def("GetUTF8Text", &ResultIterator::GetUTF8Text, py::arg("pageIterLv"))
+        .def("Confidence", &ResultIterator::Confidence, py::arg("pageIterLv"))
         .def("GetBestLSTMSymbolChoices", &ResultIterator::GetBestLSTMSymbolChoices);
 /**
  * VERSION_INFO is set from setup.py
