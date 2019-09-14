@@ -139,6 +139,16 @@ PYBIND11_MODULE(pysseract, m) {
                  return api.GetIterator();
              },
              "Returns the iterator over boxes found in a given source image")
+        .def("GetVariableAsString",
+             [](TessBaseAPI &api, const char *name) {
+                 STRING str;
+                 bool res = api.GetVariableAsString(name, &str);
+                 if (res) {
+                     return str.c_str();
+                 }
+                 return "";
+             },
+             "Get value of named variable as a string, if it exists.")
         .def("SetSourceResolution", &TessBaseAPI::SetSourceResolution, py::arg("ppi"),
              "Set the pixel-per-inch value for the source image")
         .def("SetImageFromPath",
