@@ -129,9 +129,11 @@ PYBIND11_MODULE(pysseract, m) {
         .def_property_readonly("unlvText", &TessBaseAPI::GetUNLVText)
         .def("GetHOCRText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetHOCRText, py::arg("pagenum"))
         .def("GetTSVText", &TessBaseAPI::GetTSVText, py::arg("pagenum"))
+#if TESSERACT_VERSION >= (4 << 16 | 1 << 8)
         .def("GetAltoText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetAltoText, py::arg("pagenum"))
         .def("GetLSTMBoxText", &TessBaseAPI::GetLSTMBoxText, py::arg("pagenum"))
         .def("GetWordStrBoxText", &TessBaseAPI::GetWordStrBoxText, py::arg("pagenum"))
+#endif
         .def("GetOsdText", &TessBaseAPI::GetOsdText, py::arg("pagenum"))
         .def("GetIterator",
              [](TessBaseAPI &api) {
@@ -247,6 +249,9 @@ PYBIND11_MODULE(pysseract, m) {
         .def("Begin", &ResultIterator::Begin)
         .def("Next", &ResultIterator::Next, py::arg("pageIterLv"))
         .def("Empty", &ResultIterator::Empty, py::arg("pageIterLv"))
+#if TESSERACT_VERSION >= (4 << 16 | 1 << 8)
+        .def("GetBestLSTMSymbolChoices", &ResultIterator::GetBestLSTMSymbolChoices)
+#endif
         .def("BoundingBox",
              [](const ResultIterator &ri, const PageIteratorLevel &lv) {
                  Box box;
@@ -262,8 +267,7 @@ PYBIND11_MODULE(pysseract, m) {
         .def("ParagraphIsLtr", &ResultIterator::ParagraphIsLtr)
         .def("BlanksBeforeWord", &ResultIterator::BlanksBeforeWord)
         .def("GetUTF8Text", &ResultIterator::GetUTF8Text, py::arg("pageIterLv"))
-        .def("Confidence", &ResultIterator::Confidence, py::arg("pageIterLv"))
-        .def("GetBestLSTMSymbolChoices", &ResultIterator::GetBestLSTMSymbolChoices);
+        .def("Confidence", &ResultIterator::Confidence, py::arg("pageIterLv"));
 /**
  * VERSION_INFO is set from setup.py
  **/
