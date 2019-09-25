@@ -3,6 +3,15 @@ Pysseract
 
 A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
 
+## Basic usage
+
+```python
+import pysseract
+t = pysseract.Pysseract()
+t.SetImageFromPath('tests/001-helloworld.png')
+print(t.utf8Text)
+```
+
 ## Build
 
 Requirements

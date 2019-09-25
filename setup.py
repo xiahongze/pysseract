@@ -1,12 +1,14 @@
 import shutil
 import sys
 from glob import glob
+from pathlib import Path
 
 import setuptools
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
-__version__ = '0.0.1'
+__version__ = '0.1.2'
+this_path = Path(__file__)
 
 
 class get_pybind_include(object):
@@ -98,15 +100,19 @@ if __name__ == "__main__":
         language='c++'
     )
 
+    with open(this_path.with_name("README.md")) as f:
+        doc = f.read()
+
     setup(
-        name='Pysseract',
+        name='pysseract',
         version=__version__,
         maintainer='Hongze Xia',
         maintainer_email='hongzex@gmail.com',
         author='Hongze Xia and Stephen Hogg',
         url='https://github.com/xiahongze/pysseract',
         description='Python binding to Tesseract API',
-        long_description='',
+        long_description=doc,
+        long_description_content_type='text/markdown',
         license='GPL-3',
         ext_modules=[ext],
         install_requires=[],
