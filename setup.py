@@ -1,5 +1,6 @@
 import shutil
 import sys
+import os
 from glob import glob
 from pathlib import Path
 
@@ -95,7 +96,8 @@ if __name__ == "__main__":
             # Path to pybind11 headers
             get_pybind_include(),
             get_pybind_include(user=True),
-            "src/"
+            "src/",
+            os.path.join(sys.prefix, 'include')
         ],
         language='c++'
     )
