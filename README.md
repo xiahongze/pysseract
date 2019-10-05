@@ -1,6 +1,8 @@
 Pysseract
 =========
 
+[![Build Status](https://api.travis-ci.org/xiahongze/pysseract.png)](https://api.travis-ci.org/xiahongze/pysseract)
+
 A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
 
 [Documentation](https://pysseract.readthedocs.io/en/latest/pysseract.html) is hosted on *readthedocs*.
