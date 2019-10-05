@@ -1,7 +1,7 @@
 Pysseract
 =========
 
-[![Build Status](https://api.travis-ci.org/xiahongze/pysseract.png)](https://api.travis-ci.org/xiahongze/pysseract)
+[![Build Status](https://travis-ci.com/xiahongze/pysseract.svg?branch=master)](https://travis-ci.com/xiahongze/pysseract)
 
 A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
 
