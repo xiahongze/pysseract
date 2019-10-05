@@ -1,0 +1,13 @@
+dist: bionic
+git:
+  depth: 3
+language: python
+before_install:
+  - sudo apt-get install -y g++ libtesseract4 tesseract-ocr-eng libtesseract-dev
+python:
+  - '3.6'
+  - '3.7'
+install:
+  - pip install pybind11 setuptools
+script:
+  - python setup.py test

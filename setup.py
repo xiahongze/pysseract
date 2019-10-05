@@ -77,7 +77,6 @@ class BuildExt(build_ext):
         opts = self.c_opts.get(ct, [])
         opts.append(f'-DVERSION_INFO="{self.distribution.get_version()}"')
         link_opts = self.l_opts.get(ct, [])
-        print(opts, link_opts)
         if ct == 'unix':
             opts.append(cpp_flag(self.compiler))
             if has_flag(self.compiler, '-fvisibility=hidden'):

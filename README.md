@@ -3,6 +3,8 @@ Pysseract
 
 A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
 
+[Documentation](https://pysseract.readthedocs.io/en/latest/pysseract.html) is hosted on *readthedocs*.
+
 ## Basic usage
 
 ```python
@@ -17,11 +19,11 @@ print(t.utf8Text)
 Requirements
 
 - gcc/clang with at least c++11 support
-- libtesseract
+- libtesseract, libtesseract-dev
 - pybind11>=2.2
 
 ```bash
-python3 setup.py build
+python3 setup.py test build install
 ```
 
 # Build document
@@ -36,8 +38,9 @@ You should find the generated html under `build/sphinx`.
 ## Contribute
 
 Look at [Tesseract BaseAPI](https://github.com/tesseract-ocr/tesseract/blob/master/src/api/baseapi.cpp)
-and import those functions of interest to
-`pysseract.cpp`, declare in `pysseract.h` and export in `pymodule.cpp`.
+and import those functions of interest to `pymodule.cpp`.
+
+Please write a brief description in your wrapper function like those already in `pymodule.cpp`.
 
 ## Reference
 
