@@ -1,7 +1,7 @@
-dist: bionic
 git:
   depth: 3
 language: python
+if: tag IS present
 before_install:
 - sudo apt-get install -y g++ libtesseract4 tesseract-ocr-eng libtesseract-dev
 matrix:
@@ -21,7 +21,7 @@ install:
 - docker pull $DOCKER_IMAGE
 script:
 - docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD
-  /io/travis/build-wheels.sh
+  /io/build-wheels.sh
 deploy:
   provider: pypi
   user: hxia
