@@ -22,6 +22,7 @@ install:
 script:
 - docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD
   /io/build-wheels.sh
+- python setup.py test
 deploy:
   provider: pypi
   user: hxia
