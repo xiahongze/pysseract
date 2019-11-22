@@ -3,23 +3,25 @@ git:
   depth: 3
 language: python
 before_install:
-  - sudo apt-get install -y g++ libtesseract4 tesseract-ocr-eng libtesseract-dev
+- sudo apt-get install -y g++ libtesseract4 tesseract-ocr-eng libtesseract-dev
 matrix:
   include:
-    - sudo: required
-      services:
-        - docker
-      env:
-        - DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
-    - sudo: required
-      services:
-        - docker
-      env:
-        - DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
-        - PRE_CMD=linux32
+  - sudo: required
+    services:
+    - docker
+    env:
+    - DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+  - sudo: required
+    services:
+    - docker
+    env:
+    - DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
+    - PRE_CMD=linux32
 install:
-  # - pip install pybind11 setuptools
-  - docker pull $DOCKER_IMAGE
+- docker pull $DOCKER_IMAGE
 script:
-  - docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
-  # - python setup.py test
+- docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD
+  /io/travis/build-wheels.sh
+deploy:
+  password:
+    secure: SgDxo2UssgVZwsBthfO7gO0qd3kiEDKLvd3IxxoxdDwvNcn1M9KlubqUfPWhvOyvxZu7bD3vUuhuB5HqZ1A7YlqXzgNbX4lk/fw9QslgxLiG4x8o6ze/PiU9dZOUrbTq7B4zdehFdUwApRzA2iErSIY7AvOPtdM+mC7rwYCaFvOhHmaLxjUDReRqsQu1PmYxZ9xve3kpxHhnwQUVc96jiQK8K+i5S7BoxgW6utF0MV1WEXU21JzSe+mQnO36NQ9MMEJPmV43hZSvNS6aKM4GfnhFDkhmu6g5DE6j2zc+mcC/JMcH4gPwQI9Gk389p95EfCU0c2HwerHFq00xoPv4l7cS72sieGcWS76kZq/OvVvuMfwxF05TQdS8zbGYQRwbX1f/uAH2XYJITxV192+C3D5GdvpnYJsLk0h4upnzVto1WyMtKFIMQ24MdBS9wHcf/eoQHYsZzetVoDZW1Trx+dxBSXpDkl1VUzzVrwLsgiSclFrtTpkVuHzHrZdb4c/v+aiMD3G9Fo0HRn9W0vAzqCA9VzjbloRk60H0jyjfMFDd/lMu7v2MKKb9JPBsgq0enUtLY9YVHcgdZ0c80wgB91z8euHWM6DdM2XOLlwMGz3gBP/l48jbDiSy2GpnwQtFo6f5sXu+1L5TneZc2ZepolM5nX/F5bCGmqPmU2pBqOs=
