@@ -20,9 +20,8 @@ done
 
 # Test
 for PYBIN in /opt/python/cp3*/bin/; do
-    "${PYBIN}/pip" install -r /io/requirements-test.txt
     "${PYBIN}/pip" install --no-index -f /io/wheelhouse pysseract
-    (cd "$PYHOME"; "${PYBIN}/pytest" /io/test/)
+    "${PYBIN}/python" setup.py test
 done
 
 #  Upload
