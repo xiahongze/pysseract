@@ -4,10 +4,22 @@ git:
 language: python
 before_install:
   - sudo apt-get install -y g++ libtesseract4 tesseract-ocr-eng libtesseract-dev
-python:
-  - '3.6'
-  - '3.7'
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env:
+        - DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+    - sudo: required
+      services:
+        - docker
+      env:
+        - DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
+        - PRE_CMD=linux32
 install:
-  - pip install pybind11 setuptools
+  # - pip install pybind11 setuptools
+  - docker pull $DOCKER_IMAGE
 script:
-  - python setup.py test
+  - docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+  # - python setup.py test
