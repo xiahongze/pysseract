@@ -20,7 +20,7 @@ install:
 - docker pull $DOCKER_IMAGE
 script:
 - docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD
-  source /io/build-wheels.sh
+  sh /io/build-wheels.sh
 deploy:
   provider: pypi
   user: __token__
