@@ -60,7 +60,7 @@ cd autoconf-archive-2019.01.06/
 make
 make install
 cd /usr/src/
-wget --quiet --no-check-certificate --http://leptonica.org/source/leptonica-1.77.0.tar.gz
+wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
 tar xfz leptonica-1.77.0.tar.gz
 cd leptonica-1.77.0/
 ./configure --prefix=/usr/local/
