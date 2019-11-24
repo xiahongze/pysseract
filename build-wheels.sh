@@ -22,12 +22,13 @@ yum -y install tesseract-langpack-eng
 #./configure --prefix=/usr
 #make
 #make install
-#wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
-#tar xfz leptonica-1.77.0.tar.gz
-#cd leptonica-1.77.0/
-#./configure --prefix=/usr/local/
-#make
-#make install
+cd /usr/src
+wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
+tar xfz leptonica-1.77.0.tar.gz
+cd leptonica-1.77.0/
+./configure --prefix=/usr/local/
+make
+make install
 #cd /usr/src/
 #wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
 #tar xvvfz tesseract-4.0.0.tar.gz
