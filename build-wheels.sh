@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e -x
-yum -y install wget xz
+yum -y install wget xz pkgconfig
 yum -y install epel-release
 
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
