@@ -30,10 +30,11 @@ cd tesseract-4.1.0
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 cp   eng.traineddata osd.traineddata ./tessdata/
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+#export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
-./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
+PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LIBLEPT_HEADERSDIR=/usr/local/include ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 make install
+ldconfig
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # From here on, the script is building and testing our package
