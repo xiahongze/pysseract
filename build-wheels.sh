@@ -30,9 +30,9 @@ cd leptonica-1.77.0/
 make
 make install
 #cd /usr/src/
-wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
-tar xvvfz tesseract-4.0.0.tar.gz
-#cd tesseract-4.0.0
+wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
+tar xfz tesseract-4.1.0.tar.gz
+#cd tesseract-4.1.0
 #curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
 #curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 #cp   eng.traineddata osd.traineddata ./tessdata/
@@ -44,7 +44,7 @@ tar xvvfz tesseract-4.0.0.tar.gz
 #mv /usr/src/leptonica-1.77.0/src /usr/src/leptonica-1.77.0/leptonica
 #ln -s /usr/src/leptonica-1.77.0/leptonica /usr/local/include
 #ln -s /usr/src/tesseract-4.0.0/include/tesseract /usr/local/include
-export CPATH=/usr/src/tesseract-4.0.0/include:${CPATH}
+export CPATH=/usr/src/tesseract-4.1.0/include:${CPATH}
 # From here on, the script is building and testing our package
 export PYHOME=/home
 cd ${PYHOME}
