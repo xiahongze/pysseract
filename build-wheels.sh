@@ -53,7 +53,8 @@ yum -y install libpng-devel libtiff-devel libjpeg-devel
 #source /opt/rh/devtoolset-7/enable
 cd /usr/src/
 wget http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
-tar xvvf autoconf-archive-2019.01.06.tar.xz
+xz --decompress autoconf-archive-2019.01.06.tar.xz
+tar xvvf autoconf-archive-2019.01.06.tar
 cd autoconf-archive-2019.01.06/
 ./configure --prefix=/usr
 make
