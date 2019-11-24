@@ -3,7 +3,8 @@ set -e -x
 yum-config-manager --add-repo https://download.opensuse.org/repositories/home:/Alexander_Pozdnyakov/CentOS_7/
 rpm --import https://build.opensuse.org/projects/home:Alexander_Pozdnyakov/public_key
 yum update
-yum install tesseract-ocr-eng
+yum install tesseract
+yum install tesseract-langpack-eng
 
 
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
