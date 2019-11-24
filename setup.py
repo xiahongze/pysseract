@@ -96,6 +96,7 @@ if __name__ == "__main__":
             get_pybind_include(),
             get_pybind_include(user=True),
             "src/",
+            "/usr/local/include",
             os.path.join(sys.prefix, 'include')
         ],
         language='c++'
