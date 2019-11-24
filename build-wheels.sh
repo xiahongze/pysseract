@@ -2,6 +2,7 @@
 set -e -x
 
 yum -y install wget
+yum -y update glibc
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
 export PATH="$PATH:/usr/local/bin"
