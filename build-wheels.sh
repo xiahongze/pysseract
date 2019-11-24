@@ -49,7 +49,7 @@ cd ${PYHOME}
 ln -s /opt/python/cp37-cp37m/bin/cmake /usr/bin/cmake
 
 # Compile wheels
-for PYBIN in /opt/python/cp3*/bin; do
+for PYBIN in /opt/python/cp37*/bin; do
     "${PYBIN}/pip" wheel /io/ -w wheelhouse/
     "${PYBIN}/python" /io/setup.py sdist -d /io/wheelhouse/
 done
@@ -60,7 +60,7 @@ for whl in wheelhouse/*.whl; do
 done
 
 # Test
-for PYBIN in /opt/python/cp3*/bin/; do
+for PYBIN in /opt/python/cp37*/bin/; do
     "${PYBIN}/pip" install --no-index -f /io/wheelhouse pysseract
     "${PYBIN}/python" setup.py test
 done
