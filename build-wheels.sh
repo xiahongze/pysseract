@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e -x
-yum -y install wget xz pkgconfig
-yum -y install epel-release
+yum -y install wget 
 
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
@@ -9,8 +8,8 @@ export PATH="$PATH:/usr/local/bin:/usr/bin"
 yum -y groupinstall "development tools"
 yum -y install libpng-devel libtiff-devel libjpeg-devel
 yum -y install centos-release-scl
-yum -y install devtoolset-7-gcc-c++
-source /opt/rh/devtoolset-7/enable
+#yum -y install devtoolset-7-gcc-c++
+source /opt/rh/devtoolset-8/enable
 cd /usr/src/
 wget --quiet http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
 tar xfJ autoconf-archive-2019.01.06.tar.xz
