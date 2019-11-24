@@ -29,7 +29,7 @@ if [ ${MACHINE_TYPE} == 'x86_64' ]; then
     wget --quiet $SERVER64/$GLIBC64_3
     wget --quiet $SERVER64/$GLIBC64_4
     wget --quiet $SERVER64/$GLIBC64_5
-    yum -y install $GLIBC64_1 $GLIBC64_2 $GLIBC64_3 $GLIBC64_4 $GLIBC64_5
+    # yum -y install $GLIBC64_1 $GLIBC64_2 $GLIBC64_3 $GLIBC64_4 $GLIBC64_5
     wget --quiet --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ./miniconda.sh
 else
     wget --quiet $SERVER32/$GLIBC32_1
@@ -37,7 +37,7 @@ else
     wget --quiet $SERVER32/$GLIBC32_3
     wget --quiet $SERVER32/$GLIBC32_4
     wget --quiet $SERVER32/$GLIBC32_5
-    yum -y install $GLIBC32_1 $GLIBC32_2 $GLIBC32_3 $GLIBC32_4 $GLIBC32_5
+    # yum -y install $GLIBC32_1 $GLIBC32_2 $GLIBC32_3 $GLIBC32_4 $GLIBC32_5
     wget --quiet --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh -O ./miniconda.sh
 fi
 
