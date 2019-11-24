@@ -24,9 +24,9 @@ cd leptonica-1.77.0/
 make
 make install
 cd /usr/src/
-wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
-tar xvvfz tesseract-4.1.0.tar.gz
-cd tesseract-4.1.0
+wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
+tar xvvfz tesseract-4.0.0.tar.gz
+cd tesseract-4.0.0
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 cp   eng.traineddata osd.traineddata ./tessdata/
