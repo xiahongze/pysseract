@@ -8,10 +8,11 @@ yum -y install epel-release
 export PATH="$PATH:/usr/local/bin:/usr/bin"
 yum -y groupinstall "development tools"
 yum -y install libpng-devel libtiff-devel libjpeg-devel
+yum -y install centos-release-scl
+yum -y install devtoolset-7-gcc-c++
 cd /usr/src/
-wget http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
-xz --decompress autoconf-archive-2019.01.06.tar.xz
-tar xf autoconf-archive-2019.01.06.tar
+wget --quiet http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
+tar xvvfJ autoconf-archive-2019.01.06.tar.xz
 cd autoconf-archive-2019.01.06/
 ./configure --prefix=/usr
 make
@@ -22,19 +23,17 @@ cd leptonica-1.77.0/
 ./configure --prefix=/usr/local/
 make
 make install
-cd /usr/src
-curl -L https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz >> ./tesseract-4.1.0.tar.gz
-tar xfz tesseract-4.1.0.tar.gz
+cd /usr/src/
+wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
+tar xvvfz tesseract-4.1.0.tar.gz
 cd tesseract-4.1.0
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 cp   eng.traineddata osd.traineddata ./tessdata/
-#export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-sed -i '/^autoconf/acat configure' ./autogen.sh
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
-PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LIBLEPT_HEADERSDIR=/usr/local/include ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
+./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 make install
-ldconfig
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # From here on, the script is building and testing our package
