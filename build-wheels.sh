@@ -1,40 +1,44 @@
 #!/bin/bash
 set -e -x
-yum -y install wget 
+yum-config-manager --add-repo https://download.opensuse.org/repositories/home:/Alexander_Pozdnyakov/CentOS_7/
+sudo rpm --import https://build.opensuse.org/projects/home:Alexander_Pozdnyakov/public_key
+yum update
+yum install tesseract 
+yum install tesseract-langpack-eng
 
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
-export PATH="$PATH:/usr/local/bin:/usr/bin"
-yum -y groupinstall "development tools"
-yum -y install libpng-devel libtiff-devel libjpeg-devel
-yum -y install centos-release-scl
+#export PATH="$PATH:/usr/local/bin:/usr/bin"
+#yum -y groupinstall "development tools"
+#yum -y install libpng-devel libtiff-devel libjpeg-devel
+#yum -y install centos-release-scl
 #yum -y install devtoolset-7-gcc-c++
-source /opt/rh/devtoolset-8/enable
-cd /usr/src/
-wget --quiet http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
-tar xfJ autoconf-archive-2019.01.06.tar.xz
-cd autoconf-archive-2019.01.06/
-./configure --prefix=/usr
-make
-make install
-wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
-tar xfz leptonica-1.77.0.tar.gz
-cd leptonica-1.77.0/
-./configure --prefix=/usr/local/
-make
-make install
-cd /usr/src/
-wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
-tar xvvfz tesseract-4.0.0.tar.gz
-cd tesseract-4.0.0
-curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
-curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
-cp   eng.traineddata osd.traineddata ./tessdata/
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-./autogen.sh
-./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
-make install
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+#source /opt/rh/devtoolset-8/enable
+#cd /usr/src/
+#wget --quiet http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
+#tar xfJ autoconf-archive-2019.01.06.tar.xz
+#cd autoconf-archive-2019.01.06/
+#./configure --prefix=/usr
+#make
+#make install
+#wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
+#tar xfz leptonica-1.77.0.tar.gz
+#cd leptonica-1.77.0/
+#./configure --prefix=/usr/local/
+#make
+#make install
+#cd /usr/src/
+#wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
+#tar xvvfz tesseract-4.0.0.tar.gz
+#cd tesseract-4.0.0
+#curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
+#curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
+#cp   eng.traineddata osd.traineddata ./tessdata/
+#export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+#./autogen.sh
+#./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
+#make install
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # From here on, the script is building and testing our package
 export PYHOME=/home
