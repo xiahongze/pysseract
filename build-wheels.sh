@@ -1,6 +1,39 @@
 #!/bin/bash
 set -e -x
 
+# From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
+# This code installs tesseract 4 on CentOS 6
+export PATH="$PATH:/usr/local/bin"
+yum -y groupinstall "development tools"
+yum -y install libpng-devel libtiff-devel libjpeg-devel
+yum -y install centos-release-scl
+yum -y install devtoolset-7-gcc-c++
+source /opt/rh/devtoolset-7/enable
+cd /usr/src/
+wget http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
+tar xvvfJ autoconf-archive-2019.01.06.tar.xz
+cd autoconf-archive-2019.01.06/
+./configure --prefix=/usr
+make
+make install
+cd /usr/src/
+wget http://leptonica.org/source/leptonica-1.77.0.tar.gz
+tar xvvfz leptonica-1.77.0.tar.gz
+cd leptonica-1.77.0/
+./configure --prefix=/usr/local/
+make
+make install
+cd /usr/src/
+wget https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
+tar xvvfz tesseract-4.0.0.tar.gz
+cd tesseract-4.0.0
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+./autogen.sh
+./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
+make install
+
+
+# From here on, the script is building and testing our package
 export PYHOME=/home
 cd ${PYHOME}
 
