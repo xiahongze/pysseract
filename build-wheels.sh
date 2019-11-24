@@ -27,6 +27,9 @@ cd /usr/src/
 wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
 tar xvvfz tesseract-4.1.0.tar.gz
 cd tesseract-4.1.0
+wget -nc https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata
+wget -nc https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata
+cp   eng.traineddata osd.traineddata ./tessdata/
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
 ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
