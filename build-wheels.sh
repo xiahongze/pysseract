@@ -4,7 +4,7 @@ yum -y install wget xz
 yum -y install epel-release
 
 #wget --no-check-certificate https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O /usr/src/tesseract-4.1.0.tar.gz
-curl -L https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O /usr/src/tesseract-4.1.0.tar.gz
+curl -L https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz >> /usr/src/tesseract-4.1.0.tar.gz
 
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
