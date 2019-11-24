@@ -10,9 +10,10 @@ yum -y groupinstall "development tools"
 yum -y install libpng-devel libtiff-devel libjpeg-devel
 yum -y install centos-release-scl
 yum -y install devtoolset-7-gcc-c++
+source /opt/rh/devtoolset-7/enable
 cd /usr/src/
 wget --quiet http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
-tar xvvfJ autoconf-archive-2019.01.06.tar.xz
+tar xfJ autoconf-archive-2019.01.06.tar.xz
 cd autoconf-archive-2019.01.06/
 ./configure --prefix=/usr
 make
