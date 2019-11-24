@@ -31,7 +31,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
 ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 make install
-export LD_LIBRARY_PATH=/usr/local/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 
 # From here on, the script is building and testing our package
