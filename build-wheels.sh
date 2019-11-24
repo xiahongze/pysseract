@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e -x
 yum -y install wget xz pkgconfig
-which pkg-config
 yum -y install epel-release
 
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
-export PATH="$PATH:/usr/local/bin"
+export PATH="$PATH:/usr/local/bin:/usr/bin"
 yum -y groupinstall "development tools"
 yum -y install libpng-devel libtiff-devel libjpeg-devel
 cd /usr/src/
