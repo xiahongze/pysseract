@@ -54,24 +54,24 @@ yum -y install libpng-devel libtiff-devel libjpeg-devel
 cd /usr/src/
 wget http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2019.01.06.tar.xz
 xz --decompress autoconf-archive-2019.01.06.tar.xz
-tar xvvf autoconf-archive-2019.01.06.tar
+tar xf autoconf-archive-2019.01.06.tar
 cd autoconf-archive-2019.01.06/
 ./configure --prefix=/usr
 make
 make install
 cd /usr/src/
-wget http://leptonica.org/source/leptonica-1.77.0.tar.gz
-tar xvvfz leptonica-1.77.0.tar.gz
+wget --quiet --no-check-certificate --http://leptonica.org/source/leptonica-1.77.0.tar.gz
+tar xfz leptonica-1.77.0.tar.gz
 cd leptonica-1.77.0/
 ./configure --prefix=/usr/local/
 make
 make install
 cd /usr/src/
-wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
+wget --quiet --no-check-certificate https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
 tar xvvfz tesseract-4.1.0.tar.gz
 cd tesseract-4.1.0
-wget -nc --quiet https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata
-wget -nc --quiet https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata
+wget -nc --quiet --no-check-certificate https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata
+wget -nc --quiet --no-check-certificate https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata
 cp   eng.traineddata osd.traineddata ./tessdata/
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
