@@ -16,6 +16,10 @@ cd autoconf-archive-2019.01.06/
 ./configure --prefix=/usr
 make
 make install
+echo
+echo 
+echo
+find / -name "pkg.m4"
 cd /usr/src/
 wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
 tar xfz leptonica-1.77.0.tar.gz
