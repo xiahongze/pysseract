@@ -102,7 +102,7 @@ PYBIND11_MODULE(pysseract, m) {
              }),
              py::arg("datapath"), py::arg("language"), py::arg("engineMode"), py::arg("configsList"),
              py::arg("settingDict"), py::arg("setOnlyNonDebugParams"), R"pbdoc(
-                 detailed initialization for the base API, two conversions have been done as followed
+                 detailed initialization for the base API, two conversions have been done as follows
                  char **configs, int configs_size <==> configsList
                  const GenericVector<STRING> *vars_vec, const GenericVector<STRING> *vars_values <==> settingDict
                  )pbdoc")
@@ -119,22 +119,22 @@ PYBIND11_MODULE(pysseract, m) {
     )pbdoc")
         .def("End", &TessBaseAPI::End,
              "Close down tesseract and free up all memory, after which the instance should not be reused.")
-        .def("__enter__", [](TessBaseAPI &api) { return &api; }, "for with statement")
+        .def("__enter__", [](TessBaseAPI &api) { return &api; }, "for use in `with` statement")
         .def("__exit__",
              [](TessBaseAPI &api, py::object exc_type, py::object exc_value, py::object traceback) { api.End(); },
              "for with statement, after exitting with, the instance is not reusable.")
-        .def_property_readonly("dataPath", &TessBaseAPI::GetDatapath)
-        .def_property("pageSegMode", &TessBaseAPI::GetPageSegMode, &TessBaseAPI::SetPageSegMode)
-        .def_property_readonly("utf8Text", &TessBaseAPI::GetUTF8Text)
-        .def_property_readonly("unlvText", &TessBaseAPI::GetUNLVText)
-        .def("GetHOCRText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetHOCRText, py::arg("pagenum"))
-        .def("GetTSVText", &TessBaseAPI::GetTSVText, py::arg("pagenum"))
+        .def_property_readonly("dataPath", &TessBaseAPI::GetDatapath, R"pbdoc(Read-only: Returns the path where Tesseract model objects are stored)pbdoc")
+        .def_property("pageSegMode", &TessBaseAPI::GetPageSegMode, &TessBaseAPI::SetPageSegMode, R"pbdoc(This attribute can be used to get or set the page segmentation mode used by the tesseract model)pbdoc")
+        .def_property_readonly("utf8Text", &TessBaseAPI::GetUTF8Text, R"pbdoc(Read-only: Return all identified text concatenated into a UTF-8 string)pbdoc")
+        .def_property_readonly("UNLVText", &TessBaseAPI::GetUNLVText, R"pbdoc(Read-only: Return all identified text according to UNLV format Latin-1 with specific reject and suspect codes)pbdoc")
+        .def("GetHOCRText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetHOCRText, py::arg("pagenum"), "Make an HTML-formatted string with hOCR. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetTSVText", &TessBaseAPI::GetTSVText, py::arg("pagenum"), "Make a TSV-formatted string from the internal data structures. 'pagenum' is 0-based, appears as 1-based in results.")
 #if TESSERACT_VERSION >= (4 << 16 | 1 << 8)
-        .def("GetAltoText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetAltoText, py::arg("pagenum"))
-        .def("GetLSTMBoxText", &TessBaseAPI::GetLSTMBoxText, py::arg("pagenum"))
-        .def("GetWordStrBoxText", &TessBaseAPI::GetWordStrBoxText, py::arg("pagenum"))
+        .def("GetAltoText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetAltoText, py::arg("pagenum"), "Make an ALTO XML string from internal data. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetLSTMBoxText", &TessBaseAPI::GetLSTMBoxText, py::arg("pagenum"), "Make a box file for LSTM training from the internal data structures. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetWordStrBoxText", &TessBaseAPI::GetWordStrBoxText, py::arg("pagenum"), "Make a string formatted in the same style as Tesseract training data. 'pagenum' is 0-based, appears as 1-based in results.")
 #endif
-        .def("GetOsdText", &TessBaseAPI::GetOsdText, py::arg("pagenum"))
+        .def("GetOsdText", &TessBaseAPI::GetOsdText, py::arg("pagenum"), "Recognised text is returned as UTF-8. 'pagenum' is 0-based, appears as 1-based in results.")
         .def("GetIterator",
              [](TessBaseAPI &api) {
                  api.Recognize(nullptr);
@@ -195,7 +195,7 @@ PYBIND11_MODULE(pysseract, m) {
         .value("RAW_LINE", PageSegMode::PSM_RAW_LINE, "Segment the page in \"Raw line\" mode")
         .value("COUNT", PageSegMode::PSM_COUNT, "Segment the page in \"Count\" mode");
 
-    py::enum_<OcrEngineMode>(m, "OcrEngineMode", "Enum of Engine Mode")
+    py::enum_<OcrEngineMode>(m, "OcrEngineMode", "Enumeration of Engine Mode")
         .value("TESSERACT_ONLY", OcrEngineMode::OEM_TESSERACT_ONLY, "Run Tesseract only - fastest; deprecated")
         .value("LSTM_ONLY", OcrEngineMode::OEM_LSTM_ONLY, "Run just the LSTM line recognizer")
         .value("TESSERACT_LSTM_COMBINED", OcrEngineMode::OEM_TESSERACT_LSTM_COMBINED,
