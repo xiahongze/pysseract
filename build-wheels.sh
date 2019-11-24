@@ -30,7 +30,8 @@ curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.trainedda
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 cp   eng.traineddata osd.traineddata ./tessdata/
 #export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-AL_OPTS="-I /usr/share/aclocal" ./autogen.sh
+sed -i '/^autoconf/acat configure' ./autogen.sh
+./autogen.sh
 PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LIBLEPT_HEADERSDIR=/usr/local/include ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 make install
 ldconfig
