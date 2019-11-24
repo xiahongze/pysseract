@@ -36,7 +36,7 @@ export PATH="$PATH:/usr/local/bin"
 #./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 #make install
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-wget https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh
+wget --no-check-certificate https://repo.continuum.io/archive/Anaconda3-4.3.1-Linux-x86_64.sh
 bash Anaconda3-4.3.1-Linux-x86_64.sh
 conda install -c conda-forge tesseract
 
