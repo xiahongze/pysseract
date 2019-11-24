@@ -24,9 +24,9 @@ cd leptonica-1.77.0/
 make
 make install
 cd /usr/src/
-wget https://github.com/tesseract-ocr/tesseract/archive/4.0.0.tar.gz -O tesseract-4.0.0.tar.gz
-tar xvvfz tesseract-4.0.0.tar.gz
-cd tesseract-4.0.0
+wget https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
+tar xvvfz tesseract-4.1.0.tar.gz
+cd tesseract-4.1.0
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./autogen.sh
 ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
