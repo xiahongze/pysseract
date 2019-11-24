@@ -3,7 +3,7 @@ set -e -x
 yum-config-manager --add-repo https://download.opensuse.org/repositories/home:/Alexander_Pozdnyakov/CentOS_7/
 rpm --import https://build.opensuse.org/projects/home:Alexander_Pozdnyakov/public_key
 yum update
-yum -y install tesseract
+yum -y install tesseract wget
 yum -y install tesseract-langpack-eng
 
 
