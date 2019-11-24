@@ -97,7 +97,7 @@ if __name__ == "__main__":
             get_pybind_include(user=True),
             "src/",
             "/usr/local/include",
-            "/usr/src/tesseract-4.0.0/include/",
+            "/usr/src/tesseract-4.1.0/include/",
             os.path.join(sys.prefix, 'include')
         ],
         language='c++'
