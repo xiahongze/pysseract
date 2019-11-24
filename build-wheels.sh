@@ -16,11 +16,6 @@ cd autoconf-archive-2019.01.06/
 ./configure --prefix=/usr
 make
 make install
-echo
-echo 
-echo
-find / -name "pkg.m4"
-cd /usr/src/
 wget --quiet --no-check-certificate http://leptonica.org/source/leptonica-1.77.0.tar.gz
 tar xfz leptonica-1.77.0.tar.gz
 cd leptonica-1.77.0/
@@ -35,7 +30,7 @@ curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.trainedda
 curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 cp   eng.traineddata osd.traineddata ./tessdata/
 #export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-./autogen.sh
+ACLOCAL_FLAGS="-I /usr/share/aclocal" ./autogen.sh
 PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LIBLEPT_HEADERSDIR=/usr/local/include ./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 make install
 ldconfig
