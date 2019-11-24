@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e -x
+yum -y install wget
 
-# update glibc
+MACHINE_TYPE=`uname -m`
 SERVER=http://copr-be.cloud.fedoraproject.org/results/mosquito/myrepo-el6/
 VERSION=glibc-2.17-55.fc20
 REPO64=epel-6-x86_64
 REPO32=epel-6-i386
-
 SERVER32=$SERVER/$REPO32/$VERSION
 SERVER64=$SERVER/$REPO64/$VERSION
 #x64 rpms
@@ -22,19 +22,26 @@ GLIBC32_2=glibc-common-2.17-55.el6.i686.rpm
 GLIBC32_3=glibc-devel-2.17-55.el6.i686.rpm
 GLIBC32_4=glibc-headers-2.17-55.el6.i686.rpm
 GLIBC32_5=glibc-static-2.17-55.el6.i686.rpm
-wget --quiet $SERVER64/$GLIBC64_1
-wget --quiet $SERVER64/$GLIBC64_2
-wget --quiet $SERVER64/$GLIBC64_3
-wget --quiet $SERVER64/$GLIBC64_4
-wget --quiet $SERVER64/$GLIBC64_5
-wget --quiet $SERVER32/$GLIBC32_1
-wget --quiet $SERVER32/$GLIBC32_2
-wget --quiet $SERVER32/$GLIBC32_3
-wget --quiet $SERVER32/$GLIBC32_4
-wget --quiet $SERVER32/$GLIBC32_5
-rpm -Uvh --force --nodeps $GLIBC64_1 $GLIBC64_2 $GLIBC64_3 $GLIBC64_4 $GLIBC64_5 $GLIBC32_1 $GLIBC32_2 $GLIBC32_3 $GLIBC32_4 $GLIBC32_5
+# update glibc and download conda
+if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+    wget --quiet $SERVER64/$GLIBC64_1
+    wget --quiet $SERVER64/$GLIBC64_2
+    wget --quiet $SERVER64/$GLIBC64_3
+    wget --quiet $SERVER64/$GLIBC64_4
+    wget --quiet $SERVER64/$GLIBC64_5
+    yum -y install $GLIBC64_1 $GLIBC64_2 $GLIBC64_3 $GLIBC64_4 $GLIBC64_5
+    wget --quiet --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ./miniconda.sh
+else
+    wget --quiet $SERVER32/$GLIBC32_1
+    wget --quiet $SERVER32/$GLIBC32_2
+    wget --quiet $SERVER32/$GLIBC32_3
+    wget --quiet $SERVER32/$GLIBC32_4
+    wget --quiet $SERVER32/$GLIBC32_5
+    yum -y install $GLIBC32_1 $GLIBC32_2 $GLIBC32_3 $GLIBC32_4 $GLIBC32_5
+    wget --quiet --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh -O ./miniconda.sh
+fi
 
-yum -y install wget
+
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
 export PATH="$PATH:/usr/local/bin"
@@ -69,7 +76,7 @@ export PATH="$PATH:/usr/local/bin"
 #./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
 #make install
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-wget --quiet --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ./miniconda.sh
+
 bash miniconda.sh -b
 conda install -c conda-forge tesseract
 
