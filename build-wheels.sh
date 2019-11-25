@@ -36,6 +36,7 @@ cd tesseract-4.1.0
 mkdir include
 mkdir include/tesseract
 find ./src -name "*.h" -type f | xargs -I {} cp {} ./include/tesseract
+cp ./src/api/tess_version.h.in ./include/tesseract/tess_version.h
 #curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
 #curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 #cp   eng.traineddata osd.traineddata ./tessdata/
