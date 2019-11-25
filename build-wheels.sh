@@ -3,7 +3,7 @@ set -e -x
 yum-config-manager --add-repo https://download.opensuse.org/repositories/home:/Alexander_Pozdnyakov/CentOS_7/
 rpm --import https://build.opensuse.org/projects/home:Alexander_Pozdnyakov/public_key
 yum update
-yum -y install tesseract wget
+yum -y install tesseract wget git
 yum -y install tesseract-langpack-eng
 
 
@@ -29,10 +29,13 @@ cd leptonica-1.77.0/
 ./configure --prefix=/usr/local/
 make
 make install
-#cd /usr/src/
+cd /usr/src/
 wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
 tar xfz tesseract-4.1.0.tar.gz
-#cd tesseract-4.1.0
+cd tesseract-4.1.0
+mkdir include
+mkdir include/tesseract
+find ./src -name "*.h" -type f | xargs -I {} cp --parents {} ./include/tesseract-4.1.0
 #curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
 #curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
 #cp   eng.traineddata osd.traineddata ./tessdata/
@@ -44,7 +47,7 @@ tar xfz tesseract-4.1.0.tar.gz
 #mv /usr/src/leptonica-1.77.0/src /usr/src/leptonica-1.77.0/leptonica
 #ln -s /usr/src/leptonica-1.77.0/leptonica /usr/local/include
 #cp /usr/src/tesseract-4.1.0/include/tesseract /usr/local/include
-export CPLUS_INCLUDE_PATH=/usr/src/tesseract-4.1.0/include:${CPATH}
+#export CPLUS_INCLUDE_PATH=/usr/src/tesseract/include:${CPATH}
 # From here on, the script is building and testing our package
 export PYHOME=/home
 cd ${PYHOME}
