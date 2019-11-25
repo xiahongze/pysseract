@@ -2,7 +2,7 @@
 set -e -x
 
 export PYHOME=/home
-cd ${PYHOME}
+cd io
 
 /opt/python/cp37-cp37m/bin/pip install twine cmake 
 ln -s /opt/python/cp37-cp37m/bin/cmake /usr/bin/cmake
