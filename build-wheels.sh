@@ -26,9 +26,10 @@ for PYBIN in /opt/python/cp3*/bin/; do
     "${PYBIN}/python" setup.py test
 done
 
-#  Upload
+#  Upload to test pypi
 for WHEEL in /io/wheelhouse/pysseract*; do
     /opt/python/cp37-cp37m/bin/twine upload \
+        --repository-url https://test.pypi.org/legacy/ \
         --skip-existing \
         -u "${TWINE_USERNAME}" -p "${TWINE_PASSWORD}" \
         "${WHEEL}"
