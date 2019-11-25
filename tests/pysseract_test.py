@@ -19,7 +19,7 @@ class PysseractTest(TestCase):
 
     def testResultIter(self):
         t = pysseract.Pysseract()
-        t.pageSegMode = pysseract.PageSegMode.SPARSE_TEXT_OSD
+        t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
         t.SetImageFromPath(self.thisPath.with_name(
             "002-quick-fox.jpg").as_posix())
         t.SetSourceResolution(70)
@@ -39,7 +39,7 @@ class PysseractTest(TestCase):
 
     def testNews(self):
         t = pysseract.Pysseract()
-        t.pageSegMode = pysseract.PageSegMode.SPARSE_TEXT_OSD
+        t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
         t.SetImageFromPath(self.thisPath.with_name(
             '003-skynews.png').as_posix())
         t.SetSourceResolution(70)
