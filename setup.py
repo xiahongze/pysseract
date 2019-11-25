@@ -1,6 +1,6 @@
+import os
 import shutil
 import sys
-import os
 from glob import glob
 from pathlib import Path
 
@@ -75,7 +75,8 @@ class BuildExt(build_ext):
     def build_extensions(self):
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
-        opts.append(f'-DVERSION_INFO="{self.distribution.get_version()}"')
+        opts.append('-DVERSION_INFO="' +
+                    str(self.distribution.get_version()) + '"')
         link_opts = self.l_opts.get(ct, [])
         if ct == 'unix':
             opts.append(cpp_flag(self.compiler))
