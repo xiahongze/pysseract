@@ -21,7 +21,7 @@ for whl in ${PYHOME}/wheelhouse/*.whl; do
 done
 
 # Test
-for PYBIN in /opt/python/cp37*/bin/; do
+for PYBIN in /opt/python/cp3*/bin/; do
     "${PYBIN}/pip" install --no-index -f /io/wheelhouse pysseract
     "${PYBIN}/python" setup.py test
 done
