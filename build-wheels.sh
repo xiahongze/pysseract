@@ -48,6 +48,8 @@ cd tesseract-4.1.0
 #cp ./src/api/tess_version.h.in ./include/tesseract/tess_version.h
 ./autogen.sh
 PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LIBLEPT_HEADERSDIR=/usr/local/include ./configure --with-extra-includes=/usr/local/include --with-extra-libraries=/usr/local/lib
+make install
+ldconfig
 #export CPLUS_INCLUDE_PATH=/usr/src/tesseract/include:${CPATH}
 # From here on, the script is building and testing our package
 export PYHOME=/home
