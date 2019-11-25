@@ -3,10 +3,19 @@ set -e -x
 yum-config-manager --add-repo https://download.opensuse.org/repositories/home:/Alexander_Pozdnyakov/CentOS_7/
 rpm --import https://build.opensuse.org/projects/home:Alexander_Pozdnyakov/public_key
 yum update
-yum -y install tesseract wget git pkgconfig
+yum -y install tesseract wget git
 yum -y install tesseract-langpack-eng
 
-
+cd /usr/src
+wget --quiet https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
+tar xfz pkg-config-0.29.2.tar.gz
+cd pkg-config-0.29.2
+./configure --prefix=/usr        \
+            --with-internal-glib \
+            --disable-host-tool  \
+            --docdir=/usr/share/doc/pkg-config-0.29.2 &&
+make
+make install
 # From https://www.tekovic.com/installing-tesseract-ocr-40-on-centos-6
 # This code installs tesseract 4 on CentOS 6
 #export PATH="$PATH:/usr/local/bin:/usr/bin"
