@@ -23,7 +23,7 @@ class PysseractTest(TestCase):
         t.SetImageFromPath(self.thisPath.with_name(
             "002-quick-fox.jpg").as_posix())
         t.SetSourceResolution(70)
-        resIter: pysseract.ResultIterator = t.GetIterator()
+        resIter = t.GetIterator()
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
@@ -43,7 +43,7 @@ class PysseractTest(TestCase):
         t.SetImageFromPath(self.thisPath.with_name(
             '003-skynews.png').as_posix())
         t.SetSourceResolution(70)
-        resIter: pysseract.ResultIterator = t.GetIterator()
+        resIter = t.GetIterator()
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
