@@ -33,21 +33,12 @@ cd /usr/src/
 wget --quiet https://github.com/tesseract-ocr/tesseract/archive/4.1.0.tar.gz -O tesseract-4.1.0.tar.gz
 tar xfz tesseract-4.1.0.tar.gz
 cd tesseract-4.1.0
-mkdir include
-mkdir include/tesseract
-find ./src -name "*.h" -type f | xargs -I {} cp {} ./include/tesseract
-cp ./src/api/tess_version.h.in ./include/tesseract/tess_version.h
-#curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata >> ./eng.traineddata
-#curl -L https://github.com/tesseract-ocr/tessdata_fast/blob/master/osd.traineddata >> ./osd.traineddata
-#cp   eng.traineddata osd.traineddata ./tessdata/
-#export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-#./autogen.sh
-#./configure --prefix=/usr/local/ --with-extra-libraries=/usr/local/lib/
-#make install
-#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-#mv /usr/src/leptonica-1.77.0/src /usr/src/leptonica-1.77.0/leptonica
-#ln -s /usr/src/leptonica-1.77.0/leptonica /usr/local/include
-#cp /usr/src/tesseract-4.1.0/include/tesseract /usr/local/include
+#mkdir include
+#mkdir include/tesseract
+#find ./src -name "*.h" -type f | xargs -I {} cp {} ./include/tesseract
+#cp ./src/api/tess_version.h.in ./include/tesseract/tess_version.h
+./autogen.sh
+PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LIBLEPT_HEADERSDIR=/usr/local/include ./configure --with-extra-includes=/usr/local/include --with-extra-libraries=/usr/local/lib
 #export CPLUS_INCLUDE_PATH=/usr/src/tesseract/include:${CPATH}
 # From here on, the script is building and testing our package
 export PYHOME=/home
