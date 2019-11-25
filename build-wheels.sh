@@ -11,12 +11,12 @@ ln -s /opt/python/cp37-cp37m/bin/cmake /usr/bin/cmake
 for PYBIN in /opt/python/cp3*/bin; do
     "${PYBIN}/pip" install pybind11
     "${PYBIN}/pip" install --upgrade setuptools
-    "${PYBIN}/pip" wheel /io/ -w wheelhouse/
+    "${PYBIN}/pip" wheel /io/ -w ${PYHOME}/wheelhouse/
     "${PYBIN}/python" /io/setup.py sdist -d /io/wheelhouse/
 done
 
 # Bundle external shared libraries into the wheels and fix naming
-for whl in wheelhouse/*.whl; do
+for whl in ${PYHOME}/wheelhouse/*.whl; do
     auditwheel repair "$whl" -w /io/wheelhouse/
 done
 
