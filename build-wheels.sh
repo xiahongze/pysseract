@@ -10,6 +10,7 @@ ln -s /opt/python/cp37-cp37m/bin/cmake /usr/bin/cmake
 # Compile wheels
 for PYBIN in /opt/python/cp3*/bin; do
     "${PYBIN}/pip" install pybind11
+    "${PYBIN}/pip" install --upgrade setuptools
     "${PYBIN}/pip" wheel /io/ -w wheelhouse/
     "${PYBIN}/python" /io/setup.py sdist -d /io/wheelhouse/
 done
