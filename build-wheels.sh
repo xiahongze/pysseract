@@ -44,7 +44,7 @@ tar xfz tesseract-4.1.0.tar.gz
 #mv /usr/src/leptonica-1.77.0/src /usr/src/leptonica-1.77.0/leptonica
 #ln -s /usr/src/leptonica-1.77.0/leptonica /usr/local/include
 #cp /usr/src/tesseract-4.1.0/include/tesseract /usr/local/include
-export CPATH=/usr/src/tesseract-4.1.0/include:${CPATH}
+export CPLUS_INCLUDE_PATH=/usr/src/tesseract-4.1.0/include:${CPATH}
 # From here on, the script is building and testing our package
 export PYHOME=/home
 cd ${PYHOME}
