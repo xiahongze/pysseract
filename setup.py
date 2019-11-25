@@ -104,7 +104,7 @@ if __name__ == "__main__":
         language='c++'
     )
 
-    with open(this_path.with_name("README.md")) as f:
+    with open("README.md") as f:
         doc = f.read()
 
     setup(
