@@ -1,13 +1,33 @@
-dist: bionic
 git:
   depth: 3
 language: python
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env:
+        - DOCKER_IMAGE=stephenhogg/pysseract:x86_64
+    - sudo: required
+      services:
+        - docker
+      env:
+        - DOCKER_IMAGE=stephenhogg/pysseract:i686
+        - PRE_CMD=linux32
 before_install:
-  - sudo apt-get install -y g++ libtesseract4 tesseract-ocr-eng libtesseract-dev
-python:
-  - '3.6'
-  - '3.7'
-install:
-  - pip install pybind11 setuptools
+  - docker pull $DOCKER_IMAGE
+  - docker run --name "dockerimg" --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD -e TRAVIS_TAG $DOCKER_IMAGE $PRE_CMD
+    sh /io/build-wheels.sh
 script:
-  - python setup.py test
+  - ls
+deploy:
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: KiDZYrrjj1wKQiEtG6BMlvV+vOuHUsB2RA2Z3MPla2zOTi/9ZGKh+9BEvsPMiCdJsOCeulKSid0WTRSWB8sSaW2TCcq22Jniuta4IC4nGEuGXtED6yoPf0po36pJllaoU+ld5yTcFtZI481GINdtFPi4wVyHNPGuJxGvN/WETAxTHsRy5znZZae8XmxvaNcWo9be0VMEp6chQNjw5D8W3ewpbCHTo4Mxt34iUSkaIQwUcBgl73w6g9e9Wb9UrUNYgQ3pAlua7Uk8Cq3bh1IW9pELQmw+iqncphn+2vepMu8x15M8/B9ThlZLAnuPbhWlmLAdTHLf03gazYPKL6Znbd/mv5RFPBtAbTL8T3abKLshmN6CIaqFYP1pPZlUPfPV8Tk52vbtf8gTDH4vGQcqQ8kTfMmKLqD1BrTBSGkz+DYVZ76buhZK5SHad0gHWEGCVjg+U8trp5eLZ+wgtjtKgQ+bjbkXMg6pR6Jzten0p6hg1OeePQ8PqTzpHXnGgfrlnBydNfJj59RIYc5tbb9b8Ad8ETO7iSjdqpLu4skBAJofHJZamIKAVH5wz5NmIqrbhIy4MPPWZKvNx8DOCddt4tw+2gk6RuhjLFi8GwMtF2KdX3t2haAmSE79VYwzJzG9kYReBmkZVhb/fAl+/odaaww4H3hKmJJJoSe2DqAPmxM=
+  file:
+    - "wheelhouse/*"
+  skip_cleanup: true
+  on:
+    tags: true
+  skip_existing: true

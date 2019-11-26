@@ -1,6 +1,6 @@
+import os
 import shutil
 import sys
-import os
 from glob import glob
 from pathlib import Path
 
@@ -8,7 +8,11 @@ import setuptools
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
-__version__ = '0.1.2'
+if os.getenv('TRAVIS_TAG') == '':
+    __version__ = '0.1.2'
+else:
+    __version__ = os.getenv('TRAVIS_TAG')
+
 this_path = Path(__file__)
 
 
@@ -75,11 +79,13 @@ class BuildExt(build_ext):
     def build_extensions(self):
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
-        opts.append(f'-DVERSION_INFO="{self.distribution.get_version()}"')
+        opts.append('-DVERSION_INFO="' +
+                    str(self.distribution.get_version()) + '"')
         link_opts = self.l_opts.get(ct, [])
         if ct == 'unix':
             opts.append(cpp_flag(self.compiler))
             if has_flag(self.compiler, '-fvisibility=hidden'):
+
                 opts.append('-fvisibility=hidden')
         for ext in self.extensions:
             ext.extra_compile_args = opts
@@ -96,12 +102,14 @@ if __name__ == "__main__":
             get_pybind_include(),
             get_pybind_include(user=True),
             "src/",
+            "/usr/local/include",
+            "/usr/src/tesseract-4.1.0/include/",
             os.path.join(sys.prefix, 'include')
         ],
         language='c++'
     )
 
-    with open(this_path.with_name("README.md")) as f:
+    with open("README.md") as f:
         doc = f.read()
 
     setup(

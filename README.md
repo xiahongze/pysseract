@@ -16,7 +16,7 @@ t.SetImageFromPath('tests/001-helloworld.png')
 print(t.utf8Text)
 ```
 
-## Build
+## Building the package
 
 Requirements
 
@@ -28,14 +28,14 @@ Requirements
 python3 setup.py test build install
 ```
 
-# Build document
+# Building the documentation
 
 ```
 pip install sphinx sphinx_rtd_theme
 python3 setup.py build_sphinx
 ```
 
-You should find the generated html under `build/sphinx`.
+You should find the generated html in `build/sphinx`.
 
 ## Contribute
 
@@ -49,3 +49,7 @@ Please write a brief description in your wrapper function like those already in 
 - [basic pybind11](https://pybind11.readthedocs.io/en/master/basics.html)
 - [class based pybind11](https://pybind11.readthedocs.io/en/master/classes.html)
 - [compiling with pybind11](https://pybind11.readthedocs.io/en/master/compiling.html)
+
+## LICENSE
+
+GPLv3
