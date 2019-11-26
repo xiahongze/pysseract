@@ -33,8 +33,7 @@ for WHEEL in /io/wheelhouse/pysseract*; do
         --skip-existing \
         -u "${TWINE_USERNAME}" -p "${TWINE_PASSWORD}" \
         "${WHEEL}"
-    if [ -z "${TRAVIS_TAG}" ]
-    then
+    if [ -z "${TRAVIS_TAG}" ]; then
         newfile=$(echo "${WHEEL}" | sed "s/[0-9]+\.[0-9]+\.[0-9]+//g")
         mv "${WHEEL}" $newfile
     fi
