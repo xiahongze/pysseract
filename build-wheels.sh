@@ -34,7 +34,7 @@ for WHEEL in /io/wheelhouse/pysseract*; do
         -u "${TWINE_USERNAME}" -p "${TWINE_PASSWORD}" \
         "${WHEEL}"
     if [ -z "${TRAVIS_TAG}" ]; then
-        newfile=$(echo "${WHEEL}" | sed "s/[0-9]+\.[0-9]+\.[0-9]+//g")
+        newfile=$(echo "${WHEEL}" | sed 's/[0-9]*\.[0-9]*\.[0-9]*//g')
         mv "${WHEEL}" $newfile
     fi
 done

@@ -8,7 +8,6 @@ import setuptools
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
-print('TRAVIS_TAG: ' + os.getenv('TRAVIS_TAG'))
 __version__ = os.getenv('TRAVIS_TAG', '0.1.2')
 this_path = Path(__file__)
 
@@ -76,12 +75,12 @@ class BuildExt(build_ext):
     def build_extensions(self):
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
-        opts.append('-DVERSION_INFO="' +
-                    str(self.distribution.get_version()) + '"')
+        opts.append('-DVERSION_INFO="' + __version__ + '"')
         link_opts = self.l_opts.get(ct, [])
         if ct == 'unix':
             opts.append(cpp_flag(self.compiler))
             if has_flag(self.compiler, '-fvisibility=hidden'):
+
                 opts.append('-fvisibility=hidden')
         for ext in self.extensions:
             ext.extra_compile_args = opts
