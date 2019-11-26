@@ -26,11 +26,16 @@ for PYBIN in /opt/python/cp3*/bin/; do
     "${PYBIN}/python" setup.py test
 done
 
-#  Upload to test pypi
+#  Upload to test pypi and rename if TRAVIS_TAG not defined
 for WHEEL in /io/wheelhouse/pysseract*; do
     /opt/python/cp37-cp37m/bin/twine upload \
         --repository-url https://test.pypi.org/legacy/ \
         --skip-existing \
         -u "${TWINE_USERNAME}" -p "${TWINE_PASSWORD}" \
         "${WHEEL}"
+    if [ -z "${TRAVIS_TAG}" ]
+    then
+        newfile=$(echo "${WHEEL}" | sed "s/[0-9]+\.[0-9]+\.[0-9]+//g")
+        mv "${WHEEL}" $newfile
+    fi
 done

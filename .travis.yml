@@ -1,6 +1,14 @@
 git:
   depth: 3
 language: python
+env:
+  global:
+    - X86="x86_64"
+    - I686="i686"
+    - PY35="cp35-cp35m"
+    - PY36="cp36-cp36m"
+    - PY37="cp37-cp37m"
+    - PY38="cp38-cp38m"
 matrix:
   include:
     - sudo: required
@@ -8,21 +16,39 @@ matrix:
         - docker
       env:
         - DOCKER_IMAGE=stephenhogg/pysseract:x86_64
-install:
+        - ARCH=${X86}
+    - sudo: required
+      services:
+        - docker
+      env:
+        - DOCKER_IMAGE=stephenhogg/pysseract:i686
+        - PRE_CMD=linux32
+        - ARCH=${I686}
+before_install:
   - docker pull $DOCKER_IMAGE
-script:
-  - docker run --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD $DOCKER_IMAGE $PRE_CMD
+  - docker run --name "dockerimg" --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD -e TRAVIS_TAG $DOCKER_IMAGE $PRE_CMD
     sh /io/build-wheels.sh
+  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY35}-manylinux2014_${ARCH}.whl ./
+  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY36}-manylinux2014_${ARCH}.whl ./
+  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY37}-manylinux2014_${ARCH}.whl ./
+  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY38}-manylinux2014_${ARCH}.whl ./
+script:
+  - ls
 deploy:
   provider: pypi
   user: "__token__"
   password:
     secure: KiDZYrrjj1wKQiEtG6BMlvV+vOuHUsB2RA2Z3MPla2zOTi/9ZGKh+9BEvsPMiCdJsOCeulKSid0WTRSWB8sSaW2TCcq22Jniuta4IC4nGEuGXtED6yoPf0po36pJllaoU+ld5yTcFtZI481GINdtFPi4wVyHNPGuJxGvN/WETAxTHsRy5znZZae8XmxvaNcWo9be0VMEp6chQNjw5D8W3ewpbCHTo4Mxt34iUSkaIQwUcBgl73w6g9e9Wb9UrUNYgQ3pAlua7Uk8Cq3bh1IW9pELQmw+iqncphn+2vepMu8x15M8/B9ThlZLAnuPbhWlmLAdTHLf03gazYPKL6Znbd/mv5RFPBtAbTL8T3abKLshmN6CIaqFYP1pPZlUPfPV8Tk52vbtf8gTDH4vGQcqQ8kTfMmKLqD1BrTBSGkz+DYVZ76buhZK5SHad0gHWEGCVjg+U8trp5eLZ+wgtjtKgQ+bjbkXMg6pR6Jzten0p6hg1OeePQ8PqTzpHXnGgfrlnBydNfJj59RIYc5tbb9b8Ad8ETO7iSjdqpLu4skBAJofHJZamIKAVH5wz5NmIqrbhIy4MPPWZKvNx8DOCddt4tw+2gk6RuhjLFi8GwMtF2KdX3t2haAmSE79VYwzJzG9kYReBmkZVhb/fAl+/odaaww4H3hKmJJJoSe2DqAPmxM=
+  file:
+    - "pysseract-${TRAVIS_TAG}-${PY35}-manylinux2014_${X86}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY36}-manylinux2014_${X86}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY37}-manylinux2014_${X86}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY38}-manylinux2014_${X86}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY35}-manylinux2014_${I686}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY36}-manylinux2014_${I686}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY37}-manylinux2014_${I686}.whl"
+    - "pysseract-${TRAVIS_TAG}-${PY38}-manylinux2014_${I686}.whl"
+  skip_cleanup: true
   on:
     tags: true
   skip_existing: true
-after_success:
-  - git config --global user.name "semantic-release (via TravisCI)"
-  - git config --global user.email "semantic-release@travis"
-  - pip install python-semantic-release
-  - semantic-release publish
