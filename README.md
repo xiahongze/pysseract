@@ -2,18 +2,67 @@ Pysseract
 =========
 
 [![Build Status](https://travis-ci.org/xiahongze/pysseract.svg?branch=master)](https://travis-ci.org/xiahongze/pysseract)
+[![](https://img.shields.io/badge/python-3.5+-blue.svg)](https://www.python.org/download/releases/3.5.0/)
+[![](https://readthedocs.org/projects/pysseract/badge/?version=latest)](https://pysseract.readthedocs.io/en/latest/?badge=latest)
 
-A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
+A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract). Pip 19.3.1 or greater is required if you're installing the wheel, otherwise just install the source.
+
+You don't need to install Tesseract itself as it comes bundled in the python package. You will however need to provide the tesseract models. An example of how you might do this with English on a linux system is as follows:
+
+```
+curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.0.0/eng.traineddata
+mkdir -p /usr/local/share/tessdata/ && sudo mv eng.traineddata /usr/local/share/tessdata/ 
+```
+
+The reason the file is being put in to `/usr/local/share/tessdata/` is because that is the default value for `TESSDATA_PREFIX`, an environment variable that Tesseract uses to locate model files. You're free to override the value of `TESSDATA_PREFIX`, of course. 
 
 [Documentation](https://pysseract.readthedocs.io/en/latest/pysseract.html) is hosted on *readthedocs*.
 
 ## Basic usage
+
+In order to just get all the text from an image and concatenate it into a string, run the following:
 
 ```python
 import pysseract
 t = pysseract.Pysseract()
 t.SetImageFromPath('tests/001-helloworld.png')
 print(t.utf8Text)
+```
+
+If instead you want to iterate through the text boxes found in an image at the TEXTLINE level (coarser-grained than WORD, but also lower-level than BLOCK), then you might run the following:
+
+```
+t: pysseract.Pysseract
+resIter = t.GetIterator()
+LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+while True:
+    box = resIter.BoundingBox(LEVEL)
+    text = resIter.GetUTF8Text(LEVEL)
+    print(box)
+    print(text)
+    if not resIter.Next(LEVEL):
+        break
+```
+
+A third possibility is that you may want to control how exactly the image is segmented. This is done before instantiating a `ResultIterator`, as follows:
+
+```
+t = pysseract.Pysseract()
+t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
+t.SetImageFromPath(self.thisPath.with_name(
+    "002-quick-fox.jpg").as_posix())
+t.SetSourceResolution(70)
+resIter = t.GetIterator()
+LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+lines = []
+boxes = []
+while True:
+    box = resIter.BoundingBox(LEVEL)
+    text = resIter.GetUTF8Text(LEVEL)
+    lines.append(text)
+    boxes.append(box)
+    if not resIter.Next(LEVEL):
+        break
 ```
 
 ## Building the package
