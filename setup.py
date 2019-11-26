@@ -8,7 +8,11 @@ import setuptools
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
-__version__ = os.getenv('TRAVIS_TAG', '0.1.2')
+if os.getenv('TRAVIS_TAG') == '':
+    __version__ = '0.1.2'
+else:
+    __version__ = os.getenv('TRAVIS_TAG')
+
 this_path = Path(__file__)
 
 
@@ -75,7 +79,8 @@ class BuildExt(build_ext):
     def build_extensions(self):
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
-        opts.append('-DVERSION_INFO="' + __version__ + '"')
+        opts.append('-DVERSION_INFO="' +
+                    str(self.distribution.get_version()) + '"')
         link_opts = self.l_opts.get(ct, [])
         if ct == 'unix':
             opts.append(cpp_flag(self.compiler))
