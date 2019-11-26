@@ -1,7 +1,7 @@
 Pysseract
 =========
 
-[![Build Status](https://travis-ci.com/xiahongze/pysseract.svg?branch=master)](https://travis-ci.com/xiahongze/pysseract)
+[![Build Status](https://travis-ci.org/xiahongze/pysseract.svg?branch=master)](https://travis-ci.org/xiahongze/pysseract)
 
 A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
 
@@ -21,7 +21,7 @@ print(t.utf8Text)
 Requirements
 
 - gcc/clang with at least c++11 support
-- libtesseract, libtesseract-dev
+- libtesseract, libtesseract-dev (equivalent on non-Debian/Ubuntu systems)
 - pybind11>=2.2
 
 ```bash
