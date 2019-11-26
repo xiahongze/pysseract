@@ -23,15 +23,15 @@ matrix:
       env:
         - DOCKER_IMAGE=stephenhogg/pysseract:i686
         - PRE_CMD=linux32
-        - ARCH=${I686}
+        - ARCH=${I686
 before_install:
   - docker pull $DOCKER_IMAGE
   - docker run --name "dockerimg" --rm -v `pwd`:/io -e TWINE_USERNAME -e TWINE_PASSWORD -e TRAVIS_TAG $DOCKER_IMAGE $PRE_CMD
     sh /io/build-wheels.sh
-  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY35}-manylinux2014_${ARCH}.whl ./
-  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY36}-manylinux2014_${ARCH}.whl ./
-  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY37}-manylinux2014_${ARCH}.whl ./
-  - docker cp dockerimg:/io/wheelhouse/pysseract-${TRAVIS_TAG}-${PY38}-manylinux2014_${ARCH}.whl ./
+  - cp wheelhouse/pysseract-${TRAVIS_TAG}-${PY35}-manylinux2014_${ARCH}.whl ./
+  - cp wheelhouse/pysseract-${TRAVIS_TAG}-${PY36}-manylinux2014_${ARCH}.whl ./
+  - cp wheelhouse/pysseract-${TRAVIS_TAG}-${PY37}-manylinux2014_${ARCH}.whl ./
+  - cp wheelhouse/pysseract-${TRAVIS_TAG}-${PY38}-manylinux2014_${ARCH}.whl ./
 script:
   - ls
 deploy:
