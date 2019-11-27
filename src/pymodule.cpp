@@ -13,24 +13,24 @@ using tesseract::ResultIterator;
 using tesseract::TessBaseAPI;
 
 PYBIND11_MODULE(_pysseract, m) {
-    m.doc() = R"pbdoc(
-        pysseract
-        -----------------------
-        .. currentmodule:: pysseract
-        .. autosummary::
-        
-           :toctree: _generate
-           Pysseract
-           Box
-           ResultIterator
-           PageIteratorLevel
-           PageSegMode
-           OcrEngineMode
-           apiVersion
-           availableLanguages
-           defaultDataPath
+    // m.doc() = R"pbdoc(
+    //     pysseract
+    //     -----------------------
+    //     .. currentmodule:: pysseract
+    //     .. autosummary::
 
-    )pbdoc";
+    //        :toctree: _generate
+    //        Pysseract
+    //        Box
+    //        ResultIterator
+    //        PageIteratorLevel
+    //        PageSegMode
+    //        OcrEngineMode
+    //        apiVersion
+    //        availableLanguages
+    //        defaultDataPath
+
+    // )pbdoc";
 
     m.def("apiVersion", &tesseract::TessBaseAPI::Version, "Tesseract API version as seen in the library");
     m.def("availableLanguages",
@@ -54,7 +54,7 @@ PYBIND11_MODULE(_pysseract, m) {
           },
           "return TESSDATA_PREFIX");
 
-    py::class_<TessBaseAPI>(m, "Pysseract", R"pbdoc(
+    py::class_<TessBaseAPI>(m, "Pysseract_", R"pbdoc(
         This is the main class for interacting with the Tesseract API
         
         .. code-block:: python
@@ -131,7 +131,7 @@ PYBIND11_MODULE(_pysseract, m) {
         .def_property_readonly("utf8Text", &TessBaseAPI::GetUTF8Text,
                                R"pbdoc(Read-only: Return all identified text concatenated into a UTF-8 string)pbdoc")
         .def_property_readonly(
-            "UNLVText", &TessBaseAPI::GetUNLVText,
+            "unlvText", &TessBaseAPI::GetUNLVText,
             R"pbdoc(Read-only: Return all identified text according to UNLV format Latin-1 with specific reject and suspect codes)pbdoc")
         .def("GetHOCRText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetHOCRText, py::arg("pagenum"),
              "Make an HTML-formatted string with hOCR. 'pagenum' is 0-based, appears as 1-based in results.")

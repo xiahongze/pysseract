@@ -1,13 +1,18 @@
 from _pysseract import *
 
 
-def iter_level(self, level: PageIteratorLevel):
-    resIter = self.GetIterator()
-    while not resIter.Empty(level):
-        box = resIter.BoundingBox(level)
-        text = resIter.GetUTF8Text(level)
-        yield box, text
-        resIter.Next(level)
+class Pysseract(Pysseract_):
+    def iterAt(self, level: PageIteratorLevel):
+        r'''
+        iterAt returns a generator that allows you to iterate through all the results at a specified PageIteratorLevel
 
+        :param PageIteratorLevel level: A PageIteratorLevel value indicating the level you want to iterate through results at
+        :rtype: Iterator[Tuple[BoundingBox, str]]
+        '''
 
-setattr(Pysseract, 'iterAt', iter_level)
+        resIter = self.GetIterator()
+        while not resIter.Empty(level):
+            box = resIter.BoundingBox(level)
+            text = resIter.GetUTF8Text(level)
+            yield box, text
+            resIter.Next(level)
