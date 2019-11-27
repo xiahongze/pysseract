@@ -130,6 +130,9 @@ if __name__ == "__main__":
         packages=find_packages('src', exclude=["*.cpp"]),
         package_data={"vtt_cbd_app": ["assets/*"]},
         setup_requires=['pybind11>=2.2'],
+        extras_require={
+            'build_sphinx': ['m2r'],
+        },
         cmdclass={'build_ext': BuildExt},
         zip_safe=False,
         test_suite="tests"
