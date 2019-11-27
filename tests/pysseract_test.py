@@ -27,7 +27,7 @@ class PysseractTest(TestCase):
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
-        for box, text in t.iterAt(LEVEL):
+        for box, text in t.IterAt(LEVEL):
             lines.append(text)
             boxes.append(box)
         self.assertListEqual(
@@ -43,7 +43,7 @@ class PysseractTest(TestCase):
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
-        for box, text in t.iterAt(LEVEL):
+        for box, text in t.IterAt(LEVEL):
             lines.append(text)
             boxes.append(box)
         self.assertEqual(len(boxes), 8)
