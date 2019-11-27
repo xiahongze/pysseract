@@ -27,13 +27,9 @@ class PysseractTest(TestCase):
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
-        while True:
-            box = resIter.BoundingBox(LEVEL)
-            text = resIter.GetUTF8Text(LEVEL)
+        for box, text in t.iterAt(LEVEL):
             lines.append(text)
             boxes.append(box)
-            if not resIter.Next(LEVEL):
-                break
         self.assertListEqual(
             lines, ['The quick brown\n', 'fox jumps over\n', 'the lazy dog.\n'])
 
@@ -47,12 +43,8 @@ class PysseractTest(TestCase):
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
-        while True:
-            box = resIter.BoundingBox(LEVEL)
-            text = resIter.GetUTF8Text(LEVEL)
+        for box, text in t.iterAt(LEVEL):
             lines.append(text)
             boxes.append(box)
-            if not resIter.Next(LEVEL):
-                break
         self.assertEqual(len(boxes), 8)
         self.assertTrue('HEADLINE' in lines[-1])

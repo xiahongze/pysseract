@@ -5,7 +5,7 @@ from glob import glob
 from pathlib import Path
 
 import setuptools
-from setuptools import Extension, setup
+from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
 
 if os.getenv('TRAVIS_TAG') == '':
@@ -95,7 +95,7 @@ class BuildExt(build_ext):
 
 if __name__ == "__main__":
     ext = Extension(
-        'pysseract',
+        '_pysseract',
         glob("src/*.cpp"),
         include_dirs=[
             # Path to pybind11 headers
@@ -126,6 +126,9 @@ if __name__ == "__main__":
         license='GPL-3',
         ext_modules=[ext],
         install_requires=[],
+        package_dir={'': 'src'},
+        packages=find_packages('src', exclude=["*.cpp"]),
+        package_data={"vtt_cbd_app": ["assets/*"]},
         setup_requires=['pybind11>=2.2'],
         cmdclass={'build_ext': BuildExt},
         zip_safe=False,

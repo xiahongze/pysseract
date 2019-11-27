@@ -7,9 +7,7 @@ Pysseract
 
 A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract). Tesseract is an open-source tool made available by Google for Optical Character Recognition (OCR) - that is, getting a computer to read the text in an image. Tesseract allows you to perform this task at a number of levels of granularity (one character at a time, one word at a time, and so on), by segmenting the page in a number of different ways (by assuming the whole page is one lump of text, or one line, or sparsely located throughout the source image), and with a number of different language models including ones you have built (pre-built models are available at https://github.com/tesseract-ocr/tessdata among other places).
 
-Pip 19.3.1 or greater is required if you're installing the wheel for this package, otherwise just install the source.
-
-You don't need to install Tesseract itself as it comes bundled in the python package. You will however need to provide the tesseract models. An example of how you might do this with English on a linux system is as follows:
+Pip 19.3.1 or greater is required if you're installing the wheel for this package, otherwise just install the source. On Linux, if you install the wheel Tesseract comes included. You will however need to provide the Tesseract models. An example of how you might do this with English on a linux system is as follows:
 
 ```
 curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.0.0/eng.traineddata
@@ -37,13 +35,9 @@ If instead you want to iterate through the text boxes found in an image at the T
 with pysseract.Pysseract() as t:
     resIter = t.GetIterator()
     LEVEL = pysseract.PageIteratorLevel.TEXTLINE
-    while True:
-        box = resIter.BoundingBox(LEVEL)
-        text = resIter.GetUTF8Text(LEVEL)
-        print(box)
-        print(text)
-        if not resIter.Next(LEVEL):
-            break
+    for box, text in t.iterAt(LEVEL):
+        lines.append(text)
+        boxes.append(box)
 ```
 
 A third possibility is that you may want to control how exactly the image is segmented. This is done before instantiating a `ResultIterator`, as follows:
@@ -57,13 +51,9 @@ with pysseract.Pysseract() as t:
     LEVEL = pysseract.PageIteratorLevel.TEXTLINE
     lines = []
     boxes = []
-    while True:
-        box = resIter.BoundingBox(LEVEL)
-        text = resIter.GetUTF8Text(LEVEL)
+    for box, text in t.iterAt(LEVEL):
         lines.append(text)
         boxes.append(box)
-        if not resIter.Next(LEVEL):
-            break
 ```
 
 ## Building the package
