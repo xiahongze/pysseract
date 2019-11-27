@@ -10,3 +10,4 @@ Pysseract.egg-info/*
 .vscode
 *.pyc
 *.so
+src/pysseract.egg-info/*
