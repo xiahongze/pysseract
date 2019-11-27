@@ -34,36 +34,36 @@ print(t.utf8Text)
 If instead you want to iterate through the text boxes found in an image at the TEXTLINE level (coarser-grained than WORD, but also lower-level than BLOCK), then you might run the following:
 
 ```
-t: pysseract.Pysseract
-resIter = t.GetIterator()
-LEVEL = pysseract.PageIteratorLevel.TEXTLINE
-while True:
-    box = resIter.BoundingBox(LEVEL)
-    text = resIter.GetUTF8Text(LEVEL)
-    print(box)
-    print(text)
-    if not resIter.Next(LEVEL):
-        break
+with pysseract.Pysseract() as t:
+    resIter = t.GetIterator()
+    LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+    while True:
+        box = resIter.BoundingBox(LEVEL)
+        text = resIter.GetUTF8Text(LEVEL)
+        print(box)
+        print(text)
+        if not resIter.Next(LEVEL):
+            break
 ```
 
 A third possibility is that you may want to control how exactly the image is segmented. This is done before instantiating a `ResultIterator`, as follows:
 
 ```
-t = pysseract.Pysseract()
-t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
-t.SetImageFromPath("002-quick-fox.jpg")
-t.SetSourceResolution(70)
-resIter = t.GetIterator()
-LEVEL = pysseract.PageIteratorLevel.TEXTLINE
-lines = []
-boxes = []
-while True:
-    box = resIter.BoundingBox(LEVEL)
-    text = resIter.GetUTF8Text(LEVEL)
-    lines.append(text)
-    boxes.append(box)
-    if not resIter.Next(LEVEL):
-        break
+with pysseract.Pysseract() as t:
+    t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
+    t.SetImageFromPath("002-quick-fox.jpg")
+    t.SetSourceResolution(70)
+    resIter = t.GetIterator()
+    LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+    lines = []
+    boxes = []
+    while True:
+        box = resIter.BoundingBox(LEVEL)
+        text = resIter.GetUTF8Text(LEVEL)
+        lines.append(text)
+        boxes.append(box)
+        if not resIter.Next(LEVEL):
+            break
 ```
 
 ## Building the package
