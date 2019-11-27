@@ -12,7 +12,7 @@ using tesseract::PageSegMode;
 using tesseract::ResultIterator;
 using tesseract::TessBaseAPI;
 
-PYBIND11_MODULE(pysseract, m) {
+PYBIND11_MODULE(_pysseract, m) {
     m.doc() = R"pbdoc(
         pysseract
         -----------------------
@@ -123,18 +123,33 @@ PYBIND11_MODULE(pysseract, m) {
         .def("__exit__",
              [](TessBaseAPI &api, py::object exc_type, py::object exc_value, py::object traceback) { api.End(); },
              "for with statement, after exitting with, the instance is not reusable.")
-        .def_property_readonly("dataPath", &TessBaseAPI::GetDatapath, R"pbdoc(Read-only: Returns the path where Tesseract model objects are stored)pbdoc")
-        .def_property("pageSegMode", &TessBaseAPI::GetPageSegMode, &TessBaseAPI::SetPageSegMode, R"pbdoc(This attribute can be used to get or set the page segmentation mode used by the tesseract model)pbdoc")
-        .def_property_readonly("utf8Text", &TessBaseAPI::GetUTF8Text, R"pbdoc(Read-only: Return all identified text concatenated into a UTF-8 string)pbdoc")
-        .def_property_readonly("UNLVText", &TessBaseAPI::GetUNLVText, R"pbdoc(Read-only: Return all identified text according to UNLV format Latin-1 with specific reject and suspect codes)pbdoc")
-        .def("GetHOCRText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetHOCRText, py::arg("pagenum"), "Make an HTML-formatted string with hOCR. 'pagenum' is 0-based, appears as 1-based in results.")
-        .def("GetTSVText", &TessBaseAPI::GetTSVText, py::arg("pagenum"), "Make a TSV-formatted string from the internal data structures. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def_property_readonly("dataPath", &TessBaseAPI::GetDatapath,
+                               R"pbdoc(Read-only: Returns the path where Tesseract model objects are stored)pbdoc")
+        .def_property(
+            "pageSegMode", &TessBaseAPI::GetPageSegMode, &TessBaseAPI::SetPageSegMode,
+            R"pbdoc(This attribute can be used to get or set the page segmentation mode used by the tesseract model)pbdoc")
+        .def_property_readonly("utf8Text", &TessBaseAPI::GetUTF8Text,
+                               R"pbdoc(Read-only: Return all identified text concatenated into a UTF-8 string)pbdoc")
+        .def_property_readonly(
+            "UNLVText", &TessBaseAPI::GetUNLVText,
+            R"pbdoc(Read-only: Return all identified text according to UNLV format Latin-1 with specific reject and suspect codes)pbdoc")
+        .def("GetHOCRText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetHOCRText, py::arg("pagenum"),
+             "Make an HTML-formatted string with hOCR. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetTSVText", &TessBaseAPI::GetTSVText, py::arg("pagenum"),
+             "Make a TSV-formatted string from the internal data structures. 'pagenum' is 0-based, appears as 1-based "
+             "in results.")
 #if TESSERACT_VERSION >= (4 << 16 | 1 << 8)
-        .def("GetAltoText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetAltoText, py::arg("pagenum"), "Make an ALTO XML string from internal data. 'pagenum' is 0-based, appears as 1-based in results.")
-        .def("GetLSTMBoxText", &TessBaseAPI::GetLSTMBoxText, py::arg("pagenum"), "Make a box file for LSTM training from the internal data structures. 'pagenum' is 0-based, appears as 1-based in results.")
-        .def("GetWordStrBoxText", &TessBaseAPI::GetWordStrBoxText, py::arg("pagenum"), "Make a string formatted in the same style as Tesseract training data. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetAltoText", (char *(TessBaseAPI::*)(int)) & TessBaseAPI::GetAltoText, py::arg("pagenum"),
+             "Make an ALTO XML string from internal data. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetLSTMBoxText", &TessBaseAPI::GetLSTMBoxText, py::arg("pagenum"),
+             "Make a box file for LSTM training from the internal data structures. 'pagenum' is 0-based, appears as "
+             "1-based in results.")
+        .def("GetWordStrBoxText", &TessBaseAPI::GetWordStrBoxText, py::arg("pagenum"),
+             "Make a string formatted in the same style as Tesseract training data. 'pagenum' is 0-based, appears as "
+             "1-based in results.")
 #endif
-        .def("GetOsdText", &TessBaseAPI::GetOsdText, py::arg("pagenum"), "Recognised text is returned as UTF-8. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetOsdText", &TessBaseAPI::GetOsdText, py::arg("pagenum"),
+             "Recognised text is returned as UTF-8. 'pagenum' is 0-based, appears as 1-based in results.")
         .def("GetIterator",
              [](TessBaseAPI &api) {
                  api.Recognize(nullptr);
@@ -245,12 +260,22 @@ PYBIND11_MODULE(pysseract, m) {
                     break
 
         For more examples, please consult https://github.com/tesseract-ocr/tesseract/wiki/APIExample
-        )pbdoc")
-        .def("Begin", &ResultIterator::Begin, "Moves the iterator to point to the start of the page to begin an iteration")
-        .def("Next", &ResultIterator::Next, py::arg("pageIterLv"), "Moves to the start of the next object at the given level in the page hierarchy in the appropriate reading order and returns false if the end of the page was reached. NOTE that RIL_SYMBOL will skip non-text blocks, but all other PageIteratorLevel level values will visit each non-text block once. Think of non text blocks as containing a single para, with a single line, with a single imaginary word. Calls to Next with different levels may be freely intermixed. This function iterates words in right-to-left scripts correctly, if the appropriate language has been loaded into Tesseract.")
-        .def("Empty", &ResultIterator::Empty, py::arg("pageIterLv"), "Returns a boolean flag indicating whether the iterator is empty")
+        )pbdoc",
+                               py::dynamic_attr())
+        .def("Begin", &ResultIterator::Begin,
+             "Moves the iterator to point to the start of the page to begin an iteration")
+        .def("Next", &ResultIterator::Next, py::arg("pageIterLv"),
+             "Moves to the start of the next object at the given level in the page hierarchy in the appropriate "
+             "reading order and returns false if the end of the page was reached. NOTE that RIL_SYMBOL will skip "
+             "non-text blocks, but all other PageIteratorLevel level values will visit each non-text block once. Think "
+             "of non text blocks as containing a single para, with a single line, with a single imaginary word. Calls "
+             "to Next with different levels may be freely intermixed. This function iterates words in right-to-left "
+             "scripts correctly, if the appropriate language has been loaded into Tesseract.")
+        .def("Empty", &ResultIterator::Empty, py::arg("pageIterLv"),
+             "Returns a boolean flag indicating whether the iterator is empty at the given PageIteratorLevel")
 #if TESSERACT_VERSION >= (4 << 16 | 1 << 8)
-        .def("GetBestLSTMSymbolChoices", &ResultIterator::GetBestLSTMSymbolChoices, "Returns the LSTM choices for every LSTM timestep for the current word.")
+        .def("GetBestLSTMSymbolChoices", &ResultIterator::GetBestLSTMSymbolChoices,
+             "Returns the LSTM choices for every LSTM timestep for the current word.")
 #endif
         .def("BoundingBox",
              [](const ResultIterator &ri, const PageIteratorLevel &lv) {
@@ -262,12 +287,22 @@ PYBIND11_MODULE(pysseract, m) {
                  return box;
              },
              py::arg("pageIterLv"), "Returns the bounding box of the current item")
-        .def("IsAtBeginningOf", &ResultIterator::IsAtBeginningOf, py::arg("pageIterLv"), "IsAtBeginningOf() returns whether we're at the logical beginning of the given level. (as opposed to ResultIterator's left-to-right top-to-bottom order).")
-        .def("IsAtFinalElement", &ResultIterator::IsAtFinalElement, py::arg("pageIterLv"), py::arg("element"), "Implement PageIterator's IsAtFinalElement correctly in a BiDi context. For instance, IsAtFinalElement(RIL_PARA, RIL_WORD) returns whether we point at the last word in a paragraph.")
-        .def("ParagraphIsLtr", &ResultIterator::ParagraphIsLtr, "Return whether the current paragraph's dominant reading direction is left-to-right (as opposed to right-to-left).")
-        .def("BlanksBeforeWord", &ResultIterator::BlanksBeforeWord, "Returns whether there are any blank spaces before the start of the current text object")
-        .def("GetUTF8Text", &ResultIterator::GetUTF8Text, py::arg("pageIterLv"), "Returns the text of the current object at the specified page hierarchy level in UTF-8 format")
-        .def("Confidence", &ResultIterator::Confidence, py::arg("pageIterLv"), "Return the confidence level expressed by the model for the current object at the specified page hierarchy level");
+        .def("IsAtBeginningOf", &ResultIterator::IsAtBeginningOf, py::arg("pageIterLv"),
+             "IsAtBeginningOf() returns whether we're at the logical beginning of the given level. (as opposed to "
+             "ResultIterator's left-to-right top-to-bottom order).")
+        .def("IsAtFinalElement", &ResultIterator::IsAtFinalElement, py::arg("pageIterLv"), py::arg("element"),
+             "Implement PageIterator's IsAtFinalElement correctly in a BiDi context. For instance, "
+             "IsAtFinalElement(RIL_PARA, RIL_WORD) returns whether we point at the last word in a paragraph.")
+        .def("ParagraphIsLtr", &ResultIterator::ParagraphIsLtr,
+             "Return whether the current paragraph's dominant reading direction is left-to-right (as opposed to "
+             "right-to-left).")
+        .def("BlanksBeforeWord", &ResultIterator::BlanksBeforeWord,
+             "Returns whether there are any blank spaces before the start of the current text object")
+        .def("GetUTF8Text", &ResultIterator::GetUTF8Text, py::arg("pageIterLv"),
+             "Returns the text of the current object at the specified page hierarchy level in UTF-8 format")
+        .def("Confidence", &ResultIterator::Confidence, py::arg("pageIterLv"),
+             "Return the confidence level expressed by the model for the current object at the specified page "
+             "hierarchy level");
 /**
  * VERSION_INFO is set from setup.py
  **/
