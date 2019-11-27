@@ -54,7 +54,7 @@ PYBIND11_MODULE(_pysseract, m) {
           },
           "return TESSDATA_PREFIX");
 
-    py::class_<TessBaseAPI>(m, "Pysseract_", R"pbdoc(
+    py::class_<TessBaseAPI>(m, "Pysseract", R"pbdoc(
         This is the main class for interacting with the Tesseract API
         
         .. code-block:: python

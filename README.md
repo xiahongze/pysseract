@@ -9,7 +9,7 @@ A Python binding to [Tesseract API](https://github.com/tesseract-ocr/tesseract).
 
 Pip 19.3.1 or greater is required if you're installing the wheel for this package, otherwise just install the source. On Linux, if you install the wheel Tesseract comes included. You will however need to provide the Tesseract models. An example of how you might do this with English on a linux system is as follows:
 
-```
+```bash
 curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/4.0.0/eng.traineddata
 mkdir -p /usr/local/share/tessdata/ && sudo mv eng.traineddata /usr/local/share/tessdata/ 
 ```
@@ -18,7 +18,7 @@ The reason the file is being put in to `/usr/local/share/tessdata/` is because t
 
 [Documentation](https://pysseract.readthedocs.io/en/latest/pysseract.html) is hosted on *readthedocs*.
 
-## Basic usage
+# Basic usage
 
 In order to just get all the text from an image and concatenate it into a string, run the following:
 
@@ -31,7 +31,7 @@ print(t.utf8Text)
 
 If instead you want to iterate through the text boxes found in an image at the TEXTLINE level (coarser-grained than WORD, but also lower-level than BLOCK), then you might run the following:
 
-```
+```python
 with pysseract.Pysseract() as t:
     resIter = t.GetIterator()
     LEVEL = pysseract.PageIteratorLevel.TEXTLINE
@@ -42,7 +42,7 @@ with pysseract.Pysseract() as t:
 
 A third possibility is that you may want to control how exactly the image is segmented. This is done before instantiating a `ResultIterator`, as follows:
 
-```
+```python
 with pysseract.Pysseract() as t:
     t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
     t.SetImageFromPath("002-quick-fox.jpg")
@@ -51,12 +51,12 @@ with pysseract.Pysseract() as t:
     LEVEL = pysseract.PageIteratorLevel.TEXTLINE
     lines = []
     boxes = []
-    for box, text in t.iterAt(LEVEL):
+    for box, text in t.IterAt(LEVEL):
         lines.append(text)
         boxes.append(box)
 ```
 
-## Building the package
+# Building the package
 
 Requirements
 
@@ -70,26 +70,26 @@ python3 setup.py test build install
 
 # Building the documentation
 
-```
+```bash
 pip install sphinx sphinx_rtd_theme
 python3 setup.py build_sphinx
 ```
 
 You should find the generated html in `build/sphinx`.
 
-## Contribute
+# Contribute
 
 Look at [Tesseract BaseAPI](https://github.com/tesseract-ocr/tesseract/blob/master/src/api/baseapi.cpp)
 and import those functions of interest to `pymodule.cpp`.
 
 Please write a brief description in your wrapper function like those already in `pymodule.cpp`.
 
-## Reference
+# Reference
 
 - [basic pybind11](https://pybind11.readthedocs.io/en/master/basics.html)
 - [class based pybind11](https://pybind11.readthedocs.io/en/master/classes.html)
 - [compiling with pybind11](https://pybind11.readthedocs.io/en/master/compiling.html)
 
-## LICENSE
+# LICENSE
 
 GPLv3

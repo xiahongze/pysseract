@@ -12,9 +12,12 @@ Welcome to pysseract's documentation!
 
    pysseract
 
+
 Indices and tables
-==================
+##################
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. mdinclude:: ../README.md
