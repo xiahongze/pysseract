@@ -8,3 +8,4 @@ dependencies:
   - pybind11
   - sphinx_rtd_theme
   - tesseract==4.1.0
+  - m2r
