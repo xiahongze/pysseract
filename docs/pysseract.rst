@@ -1,1 +1,1 @@
-.. automodule:: pysseract
+.. automodule:: _pysseract
