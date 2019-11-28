@@ -33,11 +33,14 @@ If instead you want to iterate through the text boxes found in an image at the T
 
 ```python
 with pysseract.Pysseract() as t:
-    resIter = t.GetIterator()
+    boxes = []
+    text = []
+    conf = []
     LEVEL = pysseract.PageIteratorLevel.TEXTLINE
-    for box, text in t.iterAt(LEVEL):
+    for box, text, confidence in t.IterAt(LEVEL):
         lines.append(text)
         boxes.append(box)
+        confidence.append(conf)
 ```
 
 A third possibility is that you may want to control how exactly the image is segmented. This is done before instantiating a `ResultIterator`, as follows:
@@ -47,13 +50,14 @@ with pysseract.Pysseract() as t:
     t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
     t.SetImageFromPath("002-quick-fox.jpg")
     t.SetSourceResolution(70)
-    resIter = t.GetIterator()
-    LEVEL = pysseract.PageIteratorLevel.TEXTLINE
-    lines = []
     boxes = []
-    for box, text in t.IterAt(LEVEL):
+    text = []
+    conf = []
+    LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+    for box, text, confidence in t.IterAt(LEVEL):
         lines.append(text)
         boxes.append(box)
+        confidence.append(conf)
 ```
 
 # Building the package
@@ -65,13 +69,13 @@ Requirements
 - pybind11>=2.2
 
 ```bash
-python3 setup.py test build install
+python3 setup.py build install test
 ```
 
 # Building the documentation
 
 ```bash
-pip install sphinx sphinx_rtd_theme
+pip install sphinx sphinx_rtd_theme m2r
 python3 setup.py build_sphinx
 ```
 
