@@ -60,6 +60,44 @@ with pysseract.Pysseract() as t:
         confidence.append(conf)
 ```
 
+Finally, if you want to work with the low-level iterator built into Tesseract, the below code will work for you. This is primarily intended for people who want fine-grain control when searching through the results. For instance, if you want to look at the first paragraph, jump to the next word, then the next block after that, then the next symbol after that, you would use this approach:
+
+```python
+t = pysseract.Pysseract()
+t.SetImageFromPath("002-quick-fox.jpg")
+resIter = t.GetIterator()
+boxes = []
+lines = []
+confidence = []
+
+# First, look at the paragraph level
+level = pysseract.PageIteratorLevel.PARA
+boxes.append(resIter.BoundingBox(level))
+lines.append(resIter.GetUTF8Text(level))
+confidence.append(resIter.Confidence(level))
+
+# Now the next word after the paragraph we just looked at
+level = pysseract.PageIteratorLevel.WORD
+resIter.Next(level)
+boxes.append(resIter.BoundingBox(level))
+lines.append(resIter.GetUTF8Text(level))
+confidence.append(resIter.Confidence(level))
+
+# Now the next block
+level = pysseract.PageIteratorLevel.BLOCK
+resIter.Next(level)
+boxes.append(resIter.BoundingBox(level))
+lines.append(resIter.GetUTF8Text(level))
+confidence.append(resIter.Confidence(level))
+
+# Lastly, look at the next symbol after the block we just looked at
+level = pysseract.PageIteratorLevel.SYMBOL
+resIter.Next(level)
+boxes.append(resIter.BoundingBox(level))
+lines.append(resIter.GetUTF8Text(level))
+confidence.append(resIter.Confidence(level))
+```
+
 # Building the package
 
 Requirements
