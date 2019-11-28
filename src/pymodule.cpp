@@ -13,25 +13,6 @@ using tesseract::ResultIterator;
 using tesseract::TessBaseAPI;
 
 PYBIND11_MODULE(_pysseract, m) {
-    // m.doc() = R"pbdoc(
-    //     pysseract
-    //     -----------------------
-    //     .. currentmodule:: pysseract
-    //     .. autosummary::
-
-    //        :toctree: _generate
-    //        Pysseract
-    //        Box
-    //        ResultIterator
-    //        PageIteratorLevel
-    //        PageSegMode
-    //        OcrEngineMode
-    //        apiVersion
-    //        availableLanguages
-    //        defaultDataPath
-
-    // )pbdoc";
-
     m.def("apiVersion", &tesseract::TessBaseAPI::Version, "Tesseract API version as seen in the library");
     m.def("availableLanguages",
           []() {
@@ -52,21 +33,47 @@ PYBIND11_MODULE(_pysseract, m) {
               api.Init(nullptr, nullptr);
               return api.GetDatapath();
           },
-          "return TESSDATA_PREFIX");
+          "return the default location Tesseract expects models to be located in");
 
     py::class_<TessBaseAPI>(m, "Pysseract", R"pbdoc(
-        This is the main class for interacting with the Tesseract API
+        This is the main class for interacting with the Tesseract API. There are several ways to initialise this class. 
+        The simplest way with all defaults and assuming that the English model is needed is as follows:
         
         .. code-block:: python
 
             import pysseract
-            t = pysseract.Pysseract()
-            t.SetImageFromPath('/Users/hxia/Downloads/001-helloworld.png')
-            print(t.utf8Text)
-            t.End()
+            with pysseract.Pysseract() as t:
+                t.SetImageFromPath('/Users/hxia/Downloads/001-helloworld.png')
+                print(t.utf8Text)
         
-        For advanced use cases, please consult ResultIterator.
+        In order to set a language (such as French in this example), and model location ('/Users/shogg/models'), you might choose to initialise in the below manner instead:
+
+        .. code-block:: python
+
+            t = pysseract.Pysseract('/Users/shogg/models', 'fra') as t:
+
+        To initialise with French and Arabic you would run the following command:
+
+        .. code-block:: python
+
+            t = pysseract.Pysseract('/Users/shogg/models', 'fra+ara') as t:
+
+        It's also possible to set an OCR mode as well on initialisation, though there are ways to do that afterwards. 
+        If for any reason you need to perform detailed initialization for the base API, you can use the third signature listed below.
+        two conversions have been done as follows.
+        As part of that initialisation signature, two type conversions will occur, as follows:
+
+        1) char **configs, int configs_size <==> configsList
+        
+        2) const GenericVector<STRING> *vars_vec, const GenericVector<STRING> *vars_values <==> settingDict
+
+        For information about working with the results of analysis, please see the documentation for ResultIterator or Pysseract.IterAt
     )pbdoc")
+        .def(py::init([]() {
+            TessBaseAPI *api = new (TessBaseAPI);
+            api->Init(nullptr, nullptr);
+            return std::unique_ptr<TessBaseAPI>(api);
+        }))
         .def(py::init([](const char *datapath, const char *language) {
                  TessBaseAPI *api = new (TessBaseAPI);
                  api->Init(datapath, language);
@@ -101,16 +108,7 @@ PYBIND11_MODULE(_pysseract, m) {
                  return std::unique_ptr<TessBaseAPI>(api);
              }),
              py::arg("datapath"), py::arg("language"), py::arg("engineMode"), py::arg("configsList"),
-             py::arg("settingDict"), py::arg("setOnlyNonDebugParams"), R"pbdoc(
-                 detailed initialization for the base API, two conversions have been done as follows
-                 char **configs, int configs_size <==> configsList
-                 const GenericVector<STRING> *vars_vec, const GenericVector<STRING> *vars_values <==> settingDict
-                 )pbdoc")
-        .def(py::init([]() {
-            TessBaseAPI *api = new (TessBaseAPI);
-            api->Init(nullptr, nullptr);
-            return std::unique_ptr<TessBaseAPI>(api);
-        }))
+             py::arg("settingDict"), py::arg("setOnlyNonDebugParams"))
         .def("Clear", &TessBaseAPI::Clear, R"pbdoc(
         Free up recognition results and any stored image data, without actually
         freeing any recognition data that would be time-consuming to reload.
@@ -122,7 +120,7 @@ PYBIND11_MODULE(_pysseract, m) {
         .def("__enter__", [](TessBaseAPI &api) { return &api; }, "for use in `with` statement")
         .def("__exit__",
              [](TessBaseAPI &api, py::object exc_type, py::object exc_value, py::object traceback) { api.End(); },
-             "for with statement, after exitting with, the instance is not reusable.")
+             "for `with` statement; after exiting the `with` code block the instance is not reusable.")
         .def_property_readonly("dataPath", &TessBaseAPI::GetDatapath,
                                R"pbdoc(Read-only: Returns the path where Tesseract model objects are stored)pbdoc")
         .def_property(
@@ -246,7 +244,11 @@ PYBIND11_MODULE(_pysseract, m) {
                                "Returns a boolean indicating whether the dimensions of the box are valid");
 
     py::class_<ResultIterator>(m, "ResultIterator", R"pbdoc(
-        Internal Iterator that yields result at chosen level. If you're familiar with C/C++ iterators, the methods of this class should look familiar.
+        
+        Iterator that yields results for an image at chosen level. If you're familiar with C/C++ iterators, the methods of this class should look familiar.
+        The returned iterator must be deleted after use, so ideally it should be used in a `with` block. 
+        The iterator points to data held within the pysseract instance that spawned it, and therefore can only be used while that instance still exists 
+        and has not been subjected to a call of Init, SetImage, Recognize, Clear, End or anything else that changes the internal PAGE_RES.
 
         .. code-block:: python
 
@@ -262,15 +264,19 @@ PYBIND11_MODULE(_pysseract, m) {
         For more examples, please consult https://github.com/tesseract-ocr/tesseract/wiki/APIExample
         )pbdoc",
                                py::dynamic_attr())
+        .def("__enter__", [](ResultIterator &resIter) { return &resIter; }, "for use in `with` statement")
+        .def("__exit__",
+             [](ResultIterator &resIter, py::object exc_type, py::object exc_value, py::object traceback) {},
+             "for `with` statement; after exiting the `with` code block the instance is not reusable.")
         .def("Begin", &ResultIterator::Begin,
              "Moves the iterator to point to the start of the page to begin an iteration")
         .def("Next", &ResultIterator::Next, py::arg("pageIterLv"),
              "Moves to the start of the next object at the given level in the page hierarchy in the appropriate "
-             "reading order and returns false if the end of the page was reached. NOTE that RIL_SYMBOL will skip "
-             "non-text blocks, but all other PageIteratorLevel level values will visit each non-text block once. Think "
-             "of non text blocks as containing a single para, with a single line, with a single imaginary word. Calls "
-             "to Next with different levels may be freely intermixed. This function iterates words in right-to-left "
-             "scripts correctly, if the appropriate language has been loaded into Tesseract.")
+             "reading order and returns false if the end of the page was reached. Note that using the SYMBOL level "
+             "will skip non-text blocks, but all other PageIteratorLevel level values will visit each non-text block "
+             "once. Think of non text blocks as containing a single para, with a single line, with a single imaginary "
+             "word. Calls to Next with different levels may be freely intermixed. This function iterates words in "
+             "right-to-left scripts correctly, if the appropriate language has been loaded into Tesseract.")
         .def("Empty", &ResultIterator::Empty, py::arg("pageIterLv"),
              "Returns a boolean flag indicating whether the iterator is empty at the given PageIteratorLevel")
 #if TESSERACT_VERSION >= (4 << 16 | 1 << 8)

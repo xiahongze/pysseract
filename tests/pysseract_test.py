@@ -23,13 +23,13 @@ class PysseractTest(TestCase):
         t.SetImageFromPath(self.thisPath.with_name(
             "002-quick-fox.jpg").as_posix())
         t.SetSourceResolution(70)
-        resIter = t.GetIterator()
-        LEVEL = pysseract.PageIteratorLevel.TEXTLINE
-        lines = []
-        boxes = []
-        for box, text in t.IterAt(LEVEL):
-            lines.append(text)
-            boxes.append(box)
+        with t.GetIterator() as resIter:
+            LEVEL = pysseract.PageIteratorLevel.TEXTLINE
+            lines = []
+            boxes = []
+            for box, text, conf in t.IterAt(LEVEL):
+                lines.append(text)
+                boxes.append(box)
         self.assertListEqual(
             lines, ['The quick brown\n', 'fox jumps over\n', 'the lazy dog.\n'])
 
@@ -43,8 +43,11 @@ class PysseractTest(TestCase):
         LEVEL = pysseract.PageIteratorLevel.TEXTLINE
         lines = []
         boxes = []
-        for box, text in t.IterAt(LEVEL):
+        confs = []
+        for box, text, conf in t.IterAt(LEVEL):
             lines.append(text)
             boxes.append(box)
+            confs.append(conf)
         self.assertEqual(len(boxes), 8)
+        self.assertEqual(len(boxes), len(confs))
         self.assertTrue('HEADLINE' in lines[-1])
