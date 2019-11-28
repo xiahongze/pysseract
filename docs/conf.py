@@ -15,14 +15,14 @@ import sys
 #
 import sphinx_rtd_theme
 
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
 
 project = 'Pysseract'
 copyright = '2019, Hongze Xia'
-author = 'Hongze Xia'
+author = 'Hongze Xia and Stephen Hogg'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
