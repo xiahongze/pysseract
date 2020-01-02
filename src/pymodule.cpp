@@ -50,13 +50,13 @@ PYBIND11_MODULE(_pysseract, m) {
 
         .. code-block:: python
 
-            t = pysseract.Pysseract('/Users/shogg/models', 'fra') as t:
+            t = pysseract.Pysseract('/Users/shogg/models', 'fra')
 
         To initialise with French and Arabic you would run the following command:
 
         .. code-block:: python
 
-            t = pysseract.Pysseract('/Users/shogg/models', 'fra+ara') as t:
+            t = pysseract.Pysseract('/Users/shogg/models', 'fra+ara')
 
         It's also possible to set an OCR mode as well on initialisation, though there are ways to do that afterwards. 
         If for any reason you need to perform detailed initialization for the base API, you can use the third signature listed below.
@@ -93,7 +93,7 @@ PYBIND11_MODULE(_pysseract, m) {
 
                  char *configs_[configs.size()];
                  for (size_t i = 0; i < configs.size(); i++) {
-                     configs[i] = configs[i].c_str();
+                     configs_[i] = configs[i].c_str();
                  }
 
                  GenericVector<STRING> vars_vec;
