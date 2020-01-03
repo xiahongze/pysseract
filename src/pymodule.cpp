@@ -67,6 +67,10 @@ PYBIND11_MODULE(_pysseract, m) {
         
         2) const GenericVector<STRING> *vars_vec, const GenericVector<STRING> *vars_values <==> settingDict
 
+        `configsList` is a list of files from which configuration variables can be read
+        `settingDict` is a dict object containing parameters and their values to be fed to Tesseract.
+        You will typically not need both of these things, in which case one can be set as an empty List (or Dict) as the case may be.
+        
         For information about working with the results of analysis, please see the documentation for ResultIterator or Pysseract.IterAt
     )pbdoc")
         .def(py::init([]() {
@@ -93,7 +97,7 @@ PYBIND11_MODULE(_pysseract, m) {
 
                  char *configs_[configs.size()];
                  for (size_t i = 0; i < configs.size(); i++) {
-                     configs_[i] = configs[i].c_str();
+                     configs_[i] = const_cast<char *>(configs[i].c_str());
                  }
 
                  GenericVector<STRING> vars_vec;
