@@ -51,3 +51,12 @@ class PysseractTest(TestCase):
         self.assertEqual(len(boxes), 8)
         self.assertEqual(len(boxes), len(confs))
         self.assertTrue('HEADLINE' in lines[-1])
+
+    def testGetThresholdedImage(self):
+        t = pysseract.Pysseract()
+        t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
+        t.SetImageFromPath(self.thisPath.with_name(
+            "003-skynews.png").as_posix())
+        with open(self.thisPath.with_name('testThreshold.png').as_posix(), 'rb') as f:
+            expected = f.read()
+        self.assertEqual(expected, t.GetThresholdedImage())
