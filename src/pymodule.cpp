@@ -158,6 +158,24 @@ PYBIND11_MODULE(_pysseract, m) {
                  return api.GetIterator();
              },
              "Returns the iterator over boxes found in a given source image")
+        .def("GetThresholdedImage",
+             [](TessBaseAPI &api) {
+                 if (!api.GetThresholdedImageScaleFactor()) {
+                     throw std::runtime_error("Please call SetImage before retrieving the thresholded image.");
+                 }
+                 Pix *pix = api.GetThresholdedImage();
+                 l_int32 format = pixChooseOutputFormat(pix);
+                 l_uint8 *bytearr = NULL;
+                 size_t size = 0;
+                 pixWriteMem(&bytearr, &size, pix, format);
+                 if (bytearr == nullptr) throw std::runtime_error("Error returning the thresholded image");
+                 std::string byteStr(bytearr, bytearr + size);
+                 pixDestroy(&pix);
+                 return py::bytes(byteStr);
+             },
+             "Get a copy of the image Tesseract has after pre-processing is complete. This can only be called once you "
+             "have called SetImage. Unlike the underlying function in Tesseract, this will return the image as a byte "
+             "string rather than the underlying Leptonica Pix object.")
         .def("GetVariableAsString",
              [](TessBaseAPI &api, const char *name) {
                  STRING str;
@@ -242,7 +260,7 @@ PYBIND11_MODULE(_pysseract, m) {
              })
         .def_property_readonly("valid",
                                [](const Box &box) {
-                                   if (box.x < 0 || box.y <= 0 || box.w <= 0 || box.h <= 0) return false;
+                                   if (box.x < 0 || box.y < 0 || box.w <= 0 || box.h <= 0) return false;
                                    return true;
                                },
                                "Returns a boolean indicating whether the dimensions of the box are valid");
@@ -277,10 +295,10 @@ PYBIND11_MODULE(_pysseract, m) {
         .def("Next", &ResultIterator::Next, py::arg("pageIterLv"),
              "Moves to the start of the next object at the given level in the page hierarchy in the appropriate "
              "reading order and returns false if the end of the page was reached. Note that using the SYMBOL level "
-             "will skip non-text blocks, but all other PageIteratorLevel level values will visit each non-text block "
-             "once. Think of non text blocks as containing a single para, with a single line, with a single imaginary "
-             "word. Calls to Next with different levels may be freely intermixed. This function iterates words in "
-             "right-to-left scripts correctly, if the appropriate language has been loaded into Tesseract.")
+             "will skip non-text blocks, but all other PageIteratorLevel level values will visit each non-text "
+             "block once. Think of non text blocks as containing a single para, with a single line, with a single "
+             "imaginary word. Calls to Next with different levels may be freely intermixed. This function iterates "
+             "words in right-to-left scripts correctly, if the appropriate language has been loaded into Tesseract.")
         .def("Empty", &ResultIterator::Empty, py::arg("pageIterLv"),
              "Returns a boolean flag indicating whether the iterator is empty at the given PageIteratorLevel")
 #if TESSERACT_VERSION >= (4 << 16 | 1 << 8)
