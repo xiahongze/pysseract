@@ -136,7 +136,7 @@ if __name__ == "__main__":
         ],
         long_description=doc,
         long_description_content_type='text/markdown',
-        license='GPL-3',
+        license='MIT',
         ext_modules=[ext],
         install_requires=[],
         package_dir={'': 'src'},
