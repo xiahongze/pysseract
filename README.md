@@ -134,4 +134,4 @@ Please write a brief description in your wrapper function like those already in 
 
 # LICENSE
 
-GPLv3
+MIT
