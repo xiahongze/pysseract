@@ -60,3 +60,12 @@ class PysseractTest(TestCase):
         with open(self.thisPath.with_name('testThreshold.png').as_posix(), 'rb') as f:
             expected = f.read()
         self.assertEqual(expected, t.GetThresholdedImage())
+
+    def testGetInputImage(self):
+        t = pysseract.Pysseract()
+        t.pageSegMode = pysseract.PageSegMode.SINGLE_BLOCK
+        t.SetImageFromPath(self.thisPath.with_name(
+            "003-skynews.png").as_posix())
+        with open(self.thisPath.with_name("003-result.png").as_posix(), 'rb') as f:
+            expected = f.read()
+        self.assertEqual(expected, t.GetInputImage())
