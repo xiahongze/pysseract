@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('.'))
 
 
 project = 'Pysseract'
-copyright = '2019, Hongze Xia and Stephen Hogg'
+copyright = '2019, 2020 Hongze Xia and Stephen Hogg'
 author = 'Hongze Xia and Stephen Hogg'
 
 # The full version, including alpha/beta/rc tags
