@@ -152,6 +152,21 @@ PYBIND11_MODULE(_pysseract, m) {
 #endif
         .def("GetOsdText", &TessBaseAPI::GetOsdText, py::arg("pagenum"),
              "Recognised text is returned as UTF-8. 'pagenum' is 0-based, appears as 1-based in results.")
+        .def("GetInputImage",
+             [](TessBaseAPI &api) {
+                 if (!api.GetThresholdedImageScaleFactor()) {
+                     throw std::runtime_error("Please call SetImage before retrieving the input image.");
+                 }
+                 Pix *pix = api.GetInputImage();
+                 l_int32 format = pixChooseOutputFormat(pix);
+                 l_uint8 *bytearr = NULL;
+                 size_t size = 0;
+                 pixWriteMem(&bytearr, &size, pix, format);
+                 if (bytearr == nullptr) throw std::runtime_error("Error returning the input image");
+                 std::string byteStr(bytearr, bytearr + size);
+                 return py::bytes(byteStr);
+             },
+             "Return the source image being considered by Tesseract")
         .def("GetIterator",
              [](TessBaseAPI &api) {
                  api.Recognize(nullptr);
